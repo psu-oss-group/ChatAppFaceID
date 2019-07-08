@@ -15,35 +15,36 @@
         background-color:bisque;
     } */
 
-    
+
     #messageBox {
         overflow-y: scroll;
         border: 6px solid white;
-        background-color:chocolate;
-        height:420px;
-        width:720px;
-        margin:auto;
-        border-radius:10px;
+        background-color: chocolate;
+        height: 420px;
+        width: 720px;
+        margin: auto;
+        border-radius: 10px;
     }
-    #chatArea{
-        display:none;
-    }
+
+    {% comment %} #chatArea {
+        display: none;
+    } {% endcomment %}
 </style>
 
 <body>
-    <!--log in page-->
     <div class="container">
+
+        <!--log in page-->
         <div class="row" id='userLogin'>
             <div class="col-md-12">
-                    <form id="userForm">
-                            <div class="form-group">
-                                <label>Enter username</label>
-                                <input class="form-control" id="username" />
-                                <br />
-                                <input type="submit" class="btn btn-primary" value="Login" />
-                            </div>
-                        </form>
-        
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Enter username</label>
+                        <input class="form-control" id="username" />
+                        <br />
+                        <input type="submit" class="btn btn-primary" value="Login" />
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -60,7 +61,7 @@
 
                 <form id="messageForm">
                     <div class="form-group">
-                        <div class="messageBox" id="messageBox"> </div> 
+                        <div class="messageBox" id="messageBox"> </div>
                         <label>Enter message</label>
                         <textarea class="form-control" id="message"></textarea>
                         <br />
@@ -76,7 +77,7 @@
             // connect socket
             var socket = io();
 
-            // Jquery variable 
+            // Jquery variable
             var $messageForm = $('#messageForm');
             var $message = $('#message');
             var $textbox = $('#messageBox');
@@ -85,43 +86,40 @@
             var $userForm = $('#userForm');
             var $username = $('#username');
 
-            // when the user enter the new message, submit to the socket client to socket server 
+            // when the user enter the new message, submit to the socket client to socket server
             $messageForm.submit(function (e) {
                 e.preventDefault();
                 socket.emit('send message', $message.val());
-                $message.val(''); // clear the text box after sent 
+                $message.val(''); // clear the text box after sent
             });
 
             // receive the message back from the socket server
             socket.on('new message', function (data) {
-                console.log('data name' + data.name);
-                $textbox.append($chat.append('<div class="well"><strong>'+ data.name + '</strong>' + ': ' + data.msg + '</div>'));
-
+                console.log('data.name: ' + data.name);
+                $textbox.append($chat.append('<div class="well"><strong>' + data.name + '</strong>' + ': ' + data.msg + '</div>'));
             });
-            // user log in by their usename 
+            // user log in by their usename
             $userForm.submit(function (e) {
                 e.preventDefault();
-                socket.emit('new user', $username.val(), function(data){
-                    if (data)
-                    {
+                socket.emit('new user', $username.val(), function (data) {
+                    if (data) {
                         $userForm.hide();
                         $chatArea.show();
                     }
                 });
-                $username.val(''); // clear the text box after sent 
+                $username.val(''); // clear the text box after sent
             });
 
             // get the users who are online
-            socket.on('get users',function(data){
-               console.log('online users'+ data);
+            socket.on('get users', function (data) {
+                console.log('online users: ' + data);
                 var html = '';
-                for (i = 0; i < data.length; ++i){
+                for (i = 0; i < data.length; ++i) {
                     html += '<li class="list-group-item">' + data[i] + '</li>'
                 }
                 $('#users').html(html);
             })
         });
-
     </script>
 </body>
 

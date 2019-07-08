@@ -1,0 +1,18 @@
+/* body {
+  background-color:bisque;
+} */
+
+
+#messageBox {
+  overflow-y: scroll;
+  border: 6px solid white;
+  background-color: chocolate;
+  height: 420px;
+  width: 720px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+#chatArea {
+  display: none;
+}
