@@ -1,10 +1,10 @@
 # ChatAppFaceID
 Copyright (c) 2019 psu-oss-group
 
-ChatAppFaceID is a web chat app. Each user has two options to log into the chat room. They can either log in by using their google account or using the facial recognition. 
+ChatAppFaceID is a web chat (or Bulletin Board System) that allow user exchanging messages with other users through chat room ( or public message board). Each user has two options to log into the chat room. They can either log in by using their google account or using the facial recognition. 
 
 + Log in by Google Account
-    * When the user succesfully logs in by using his/her google account, they will see their ```Google profile photo, ID, your name and your email address```. Then, they can join the chat room by clicking ```Home``` in the navigation bar. 
+    * When the user succesfully logs in by using his/her google account, they will see their ```Google profile photo, ID, username, and email address```. Then, they can join the chat room by clicking ```Home``` in the navigation bar. 
     *  You should see your name in the ```Online Users``` box and the ```Hello, "your name" ```. You can begin to chat. 
 
 + Log in by Facial Recognition
@@ -29,11 +29,13 @@ In the dependencies of your package.json should have Nodejs, express, Socket.io,
 $ git clone https://github.com/psu-oss-group/ChatAppFaceID.git
 $ cd ChatAppFaceID
 $ npm install
-$ node server.js
+
 ```
 ## Run
-
-```Go to: [localhost:3000/](http://localhost:3000/)```
+```shell
+$ node server.js
+```
+Go to: [localhost:3000/](http://localhost:3000/)
 
 ## References
 //TODO
