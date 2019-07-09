@@ -18,7 +18,7 @@ Nodejs, express, Socket.io, OpenCV
 
 ## getting started
 ```shell
-$ node service.js
+$ node server.js
 ```
 //TODO
 
