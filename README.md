@@ -18,9 +18,12 @@ Nodejs, express, Socket.io, OpenCV
 
 ## getting started
 ```shell
+$ git clone https://github.com/psu-oss-group/ChatAppFaceID.git
+$ cd ChatAppFaceID
+$ npm install
 $ node server.js
 ```
-//TODO
+Go to: [localhost:3000/](http://localhost:3000/)
 
 ## References
 //TODO
