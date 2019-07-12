@@ -6,9 +6,13 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
+var cv = require('opencv4nodejs');
+
+
 app.set('view engine', 'hbs');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+
 // var logger = require('morgan');
 // var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -80,6 +84,22 @@ app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
 });
+
+app.get('/faceID', function(req, res) {
+  const webcam = new cv.VideoCapture(0);
+
+
+  res.render('faceLogin', {
+    user: req.user
+  });
+  setInterval(()=>{
+    const frame = webcam.read();
+    const image = cv.imencode(".jpg",frame).toString('base64');
+    io.emit('image',image);
+  },1000);
+});
+
+
 
 server.listen(port, function() {
   console.log('Listening on http://localhost:'+`${port}`)
