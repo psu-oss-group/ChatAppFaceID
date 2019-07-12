@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <a class="navbar-brand" href="/">
+            <img src="https://avatars2.githubusercontent.com/u/52468523?s=200&v=4" width="40" height="40" alt="">
+        </a>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WebSiteName</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/account">Account</a></li>
+                <li><a href="/auth/google">Log In</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div>
+        <div id='users'>1</div>
+    </div>
+</body>
+
+<script>
+    axios.get('/account1')
+        .then(function (response) {
+            var html = '';
+            //var user = JSON.parse(response.data.user)
+            var user = response.data.user
+            html += '<p><img src="' + user.photos[0].value + '" alt="' + user.displayName + '."></p>'
+            html += '<p>ID: ' + user.id + '</p>'
+            html += '<p>Name: ' + user.displayName + '</p>'
+            html += '<p>Email: ' + user.emails[0].value + '</p>'
+            $('#users').html(html);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+</script>

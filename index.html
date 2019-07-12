@@ -3,19 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
 </head>
 <style>
-    /* body {
-        background-color:bisque;
-    } */
-
-
     #messageBox {
         overflow-y: scroll;
         border: 6px solid white;
@@ -25,29 +20,27 @@
         margin: auto;
         border-radius: 10px;
     }
-
-    {% comment %} #chatArea {
-        display: none;
-    } {% endcomment %}
 </style>
 
 <body>
-    <div class="container">
-
-        <!--log in page-->
-        <div class="row" id='userLogin'>
-            <div class="col-md-12">
-                <form id="userForm">
-                    <div class="form-group">
-                        <label>Enter username</label>
-                        <input class="form-control" id="username" />
-                        <br />
-                        <input type="submit" class="btn btn-primary" value="Login" />
-                    </div>
-                </form>
+    <nav class="navbar navbar-default">
+        <a class="navbar-brand" href="/">
+            <img src="https://avatars2.githubusercontent.com/u/52468523?s=200&v=4" width="30" height="30" alt="">
+        </a>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WebSiteName</a>
             </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/account">Account</a></li>
+                <li><a href="/auth/google">Log In</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </ul>
         </div>
+    </nav>
 
+    <div class="container">
         <!-- chat page-->
         <div class="row" id='chatArea'>
             <div class="col-md-4">
@@ -96,18 +89,8 @@
             // receive the message back from the socket server
             socket.on('new message', function (data) {
                 console.log('data.name: ' + data.name);
-                $textbox.append($chat.append('<div class="well"><strong>' + data.name + '</strong>' + ': ' + data.msg + '</div>'));
-            });
-            // user log in by their usename
-            $userForm.submit(function (e) {
-                e.preventDefault();
-                socket.emit('new user', $username.val(), function (data) {
-                    if (data) {
-                        $userForm.hide();
-                        $chatArea.show();
-                    }
-                });
-                $username.val(''); // clear the text box after sent
+                $textbox.append($chat.prepend('<div class="well"><strong>' + data.name + '</strong>' +
+                    ': ' + data.msg + '</div>'));
             });
 
             // get the users who are online
