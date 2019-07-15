@@ -74,22 +74,4 @@
 {{else}}
 	<h2>Welcome! Please <a href="/auth/google">Login with Google</a>.</h2>	
     <br> <h2> <a href="/faceId" id = "faceID">Login with FaceID</a>.</h2>
-    {{!-- <script>
-        $("#faceID").click(function(event){
-            console.log("hit front");
-            event.preventDefault();
-            $.ajax({
-                url:"/faceId",
-                type:"GET",
-                success: function(data){
-                    console.log(data);
-                },
-                error:function(e){
-                    console.log(e);
-                }   
-            })
-        })
-    </script> --}}
-   
-
 {{/if}}

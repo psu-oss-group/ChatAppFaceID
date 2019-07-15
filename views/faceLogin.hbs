@@ -10,13 +10,57 @@
 		<script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
-        <img id="image">
+        
+        
+        {{!-- <video id ="video" width="720" height="560" autoplay muted></video> --}}
+        
+        <img id = "image"> 
+            {{!-- <canvas id="canvas-video" width="640" height="480"></canvas>
+ 
+     <script>
+            
+            
+            var socket = io();
+
+var canvas = document.getElementById('video');
+var context = canvas.getContext('2d');
+var img = new Image();
+
+// show loading notice
+context.fillStyle = '#333';
+context.fillText('Loading...', canvas.width/2-30, canvas.height/3);
+
+socket.on('frame', function (data) {
+  // Reference: http://stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
+  var uint8Arr = new Uint8Array(data.buffer);
+  var str = String.fromCharCode.apply(null, uint8Arr);
+  var base64String = btoa(str);
+
+  img.onload = function () {
+    context.drawImage(this, 0, 0, canvas.width, canvas.height);
+  };
+  img.src = 'data:image/png;base64,' + base64String;
+});
+        </script>  --}}
+        {{!-- <script>
+            function startVideo() {
+                navigator.getUserMedia(
+                    {video:{} },
+                    stream => video.srcObject = stream,
+                    err => console.error(err.message)
+                )
+            }
+            startVideo()
+           // console.log(faceapi.nets);
+        </script> --}}
+        {{!-- <img id="image"> --}}
         <script>
             const socket = io();
 
             socket.on('image',(data) =>{
                 console.log('data', data);
-               // $("#image").src=data.src;
+                var imageID = document.getElementById("image");
+                imageID.src = `data:image/jpeg;base64,${data}`;
             });
         </script>
     </body>

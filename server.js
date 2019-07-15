@@ -6,8 +6,11 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
+var faceapi = require("face-api.js");
 var cv = require('opencv4nodejs');
-
+var rectColor = [0, 255, 0];
+var rectThickness = 2;
+ 
 
 app.set('view engine', 'hbs');
 app.use(bodyParser.json())
@@ -86,21 +89,47 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/faceID', function(req, res) {
+  res.render("faceLogin");
+
   const webcam = new cv.VideoCapture(0);
 
+  webcam.set(cv.CAP_PROP_FRAME_HEIGHT,300);
+  webcam.set(cv.CAP_PROP_FRAME_WIDTH,300);
+ 
+  setInterval(() => {
+    const photo = webcam.read(); // return Mat
+      const image = cv.imencode('.jpg',photo).toString('base64');
+      io.emit('image',image);
+      
+  },100)
+})
+    
 
-  res.render('faceLogin', {
-    user: req.user
-  });
-  setInterval(()=>{
-    const frame = webcam.read();
-    const image = cv.imencode(".jpg",frame).toString('base64');
-    io.emit('image',image);
-  },1000);
-});
+    
+  
+  
+  //const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
+  
+ // faces = classifier.detectMultiScale()
+// by nesting callbacks
+//cv.imreadAsync('./people.jpg', (err, img) => {
+ // if (err) { return console.error(err); }
+  //const grayImg = img.bgrToGray();
+ //faces = classifier.detectMultiScale(grayImg).objects;
 
-
-
+  // for (face in faces) {
+  //   console.log(face.objects);
+  //   cv.drawDetection(img, [face.x, face.y], [face.width, face.height], rectColor, rectThickness);
+    
+  // }
+  //cv.imshow('i mg',img);
+ // cv.imwrite("check.jpg",img.getRegion(faces[0]))
+//  return grayImg.getRegion(faces[0]);
+//const outBase64 =  cv.imencode('.jpg', img.getRegion(faces[0])).toString('base64'); // Perform base64 encoding
+//const htmlImg='<img src=data:image/jpeg;base64,'+outBase64 + '>';
+//io.emit('image',outBase64);
+//})
+   
 server.listen(port, function() {
   console.log('Listening on http://localhost:'+`${port}`)
 });
