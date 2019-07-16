@@ -1,23 +1,32 @@
 {{#if user}}
 	<h2 style="color:cornsilk">Hello, {{ user.displayName }}.</h2>
 	<div class="row" id='chatArea'>
-		<div class="col-md-4">
+		
+        <div class="col-md-4">
 			<div class="well" style="background-color: rgb(22, 105, 173);">
 				<h3>Online Users</h3>
 				<ul class="list-group" id='users'> </ul>
 			</div>
 		</div>
-		<div class="col-md-8">
+		
+        <div class="col-md-8">
 			<div class="chat" id="chat"></div>
 
 			<form id="messageForm">
-				<div class="form-group">
-					<div class="messageBox" id="messageBox"> </div>
-					<h4 style="color:black"> <bold>Enter message </bold> </h4>
-					<textarea class="form-control" id="message"></textarea>
-					<br />
-					<input type="submit" class="btn btn-primary" value="Send Message" />
-				</div>
+                
+                <div class="input-group">
+                    <textarea class="form-control" id="message" placeholder="Enter message"></textarea>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary" value="Send Message">Submit</button>
+                    </div>
+                    
+                </div>
+                    <div class="form-group">
+					
+                    <br />
+                    <div class="messageBox" id="messageBox"> </div>					
+					
+				</div>                
 			</form>
 		</div>
 	</div>
@@ -40,7 +49,7 @@
             $messageForm.submit(function (e) {
                 e.preventDefault();
                 socket.emit('send message', $message.val());
-                $message.val(''); // clear the text box after sent
+                $message.val(''); 
             });
 
             // receive the message back from the socket server
@@ -48,19 +57,12 @@
                 console.log('data.name: ' + data.name);
                 console.log(data.color);
 
-               $textbox.append($chat.append('<div class="well" id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '</div>'));
+                var date = new Date();
+                var milliseconds = date.getDate();
+                var time = moment(milliseconds).format("H:MMa");
 
-            });
-            // user log in by their usename
-            $userForm.submit(function (e) {
-                e.preventDefault();
-                socket.emit('new user', $username.val(), function (data) {
-                    if (data) {
-                        $userForm.hide();
-                        $chatArea.show();
-                    }
-                });
-                $username.val(''); // clear the text box after sent
+               $textbox.append($chat.prepend('<div><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time +'</div>'));
+
             });
 
             // get the users who are online
