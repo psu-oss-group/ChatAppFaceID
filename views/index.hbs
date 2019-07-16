@@ -1,8 +1,8 @@
 {{#if user}}
-	<h2>Hello, {{ user.displayName }}.</h2>
+	<h2 style="color:cornsilk">Hello, {{ user.displayName }}.</h2>
 	<div class="row" id='chatArea'>
 		<div class="col-md-4">
-			<div class="well">
+			<div class="well" style="background-color: rgb(22, 105, 173);">
 				<h3>Online Users</h3>
 				<ul class="list-group" id='users'> </ul>
 			</div>
@@ -13,7 +13,7 @@
 			<form id="messageForm">
 				<div class="form-group">
 					<div class="messageBox" id="messageBox"> </div>
-					<label>Enter message</label>
+					<h4 style="color:black"> <bold>Enter message </bold> </h4>
 					<textarea class="form-control" id="message"></textarea>
 					<br />
 					<input type="submit" class="btn btn-primary" value="Send Message" />
@@ -46,7 +46,10 @@
             // receive the message back from the socket server
             socket.on('new message', function (data) {
                 console.log('data.name: ' + data.name);
-                $textbox.append($chat.append('<div class="well"><strong>' + data.name + '</strong>' + ': ' + data.msg + '</div>'));
+                console.log(data.color);
+
+               $textbox.append($chat.append('<div class="well" id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '</div>'));
+
             });
             // user log in by their usename
             $userForm.submit(function (e) {
@@ -72,6 +75,6 @@
         });
     </script>
 {{else}}
-	<h2>Welcome! Please <a href="/auth/google">Login with Google</a>.</h2>	
-    <br> <h2> <a href="/faceId" id = "faceID">Login with FaceID</a>.</h2>
+	<h2 style="color:darkgoldenrod">Welcome! Please <a href="/auth/google" style="color:white">Login with Google</a>.</h2>	
+    <br> <h2 > <a href="/faceId" id = "faceID" style="color:darkgoldenrod">Login with FaceID</a>.</h2>
 {{/if}}

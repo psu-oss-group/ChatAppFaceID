@@ -2,7 +2,9 @@
   background-color:bisque;
 } */
 
-
+body {
+  background-image: './people.jpg'
+} 
 #messageBox {
   overflow-y: scroll;
   border: 6px solid white;
@@ -13,6 +15,6 @@
   border-radius: 10px;
 }
 
-#chatArea {
+/* #chatArea {
   display: none;
-}
+} */

@@ -175,7 +175,7 @@ io.on('connection', function(socket){
 
     socket.on('send message', function(data){
         console.log('server.message: ' + data);
-        io.sockets.emit('new message', {msg:data, name:socket.username });
+        io.sockets.emit('new message', {msg:data, name:socket.username, color: "blue" });
     });
 
     function updateUsers() {
