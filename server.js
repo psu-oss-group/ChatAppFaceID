@@ -89,28 +89,53 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/faceID', function(req, res) {
-  res.render("faceLogin");
+   res.render("faceLogin");
 
-  const webcam = new cv.VideoCapture(0);
+  // const webcam = new cv.VideoCapture(0);
 
-  webcam.set(cv.CAP_PROP_FRAME_HEIGHT,300);
-  webcam.set(cv.CAP_PROP_FRAME_WIDTH,300);
+  // webcam.set(cv.CAP_PROP_FRAME_HEIGHT,300);
+  // webcam.set(cv.CAP_PROP_FRAME_WIDTH,300);
  
-  setInterval(() => {
-    const photo = webcam.read(); // return Mat
-      const image = cv.imencode('.jpg',photo).toString('base64');
-      io.emit('image',image);
+  // setInterval(() => {
+  //   const photo = webcam.read(); // return Mat
+  //     const image = cv.imencode('.jpg',photo).toString('base64');
+  //     io.emit('image',image);
       
-  },100)
-})
-    
+  // },100)
 
-    
+
+const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
   
+const mat  = cv.imread("people.jpg"); // return mat
+const grayImg = mat.bgrToGray();
+const faces_Rects = classifier.detectMultiScale(grayImg).objects; // return the array of faces with rectangular position
+console.log(faces_Rects[0].height);
+
+//cv.imwrite('people_2.jpg',grayImg.getRegion(faces_Rects[1]));
+const outBase64 = cv.imencode('.jpeg',grayImg.getRegion(faces_Rects[1])).toString('base64');
+console.log(outBase64);
+
+
+  // draw face detection
+  const blue = new cv.Vec(255, 0, 0);
+  const thickness = 2;
+  mat.drawRectangle(
+    new cv.Point(faces_Rects[0].x, faces_Rects[0].y),
+    new cv.Point(faces_Rects[0].x + faces_Rects[0].width,faces_Rects[0].y + faces_Rects[0].height),
+    blue,
+    cv.LINE_8,
+    thickness
+  );
   
-  //const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
-  
- // faces = classifier.detectMultiScale()
+  cv.imwrite('people_2.jpg',mat);
+
+  setInterval(()=>{
+  io.emit('image',outBase64);
+
+},1000);
+console.log(faces_Rects[0]);
+
+
 // by nesting callbacks
 //cv.imreadAsync('./people.jpg', (err, img) => {
  // if (err) { return console.error(err); }
@@ -129,7 +154,8 @@ app.get('/faceID', function(req, res) {
 //const htmlImg='<img src=data:image/jpeg;base64,'+outBase64 + '>';
 //io.emit('image',outBase64);
 //})
-   
+})
+
 server.listen(port, function() {
   console.log('Listening on http://localhost:'+`${port}`)
 });
@@ -175,7 +201,7 @@ io.on('connection', function(socket){
 
     socket.on('send message', function(data){
         console.log('server.message: ' + data);
-        io.sockets.emit('new message', {msg:data, name:socket.username, color: "blue" });
+        io.sockets.emit('new message', {msg:data, name:socket.username});
     });
 
     function updateUsers() {

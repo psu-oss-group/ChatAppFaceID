@@ -13,8 +13,9 @@
         
         
         {{!-- <video id ="video" width="720" height="560" autoplay muted></video> --}}
-        
+        <canvas id="mycanvas" src=""></canvas>
         <img id = "image"> 
+        
             {{!-- <canvas id="canvas-video" width="640" height="480"></canvas>
  
      <script>
@@ -60,7 +61,10 @@ socket.on('frame', function (data) {
             socket.on('image',(data) =>{
                 console.log('data', data);
                 var imageID = document.getElementById("image");
-                imageID.src = `data:image/jpeg;base64,${data}`;
+               imageID.src = `data:image/jpeg;base64,${data}`;
+              //  var ctx = document.getElementById("mycanvas");
+              //  document.querySelector('body').appendChild(ctx);
+
             });
         </script>
     </body>

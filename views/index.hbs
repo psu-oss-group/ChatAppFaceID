@@ -35,21 +35,11 @@
         $(function () {
             // connect socket
             var socket = io();
-
-            // Jquery variable
-            var $messageForm = $('#messageForm');
-            var $message = $('#message');
-            var $textbox = $('#messageBox');
-            var $chat = $('#chat');
-            var $chatArea = $('#chatArea')
-            var $userForm = $('#userForm');
-            var $username = $('#username');
-
-            // when the user enter the new message, submit to the socket client to socket server
-            $messageForm.submit(function (e) {
+         // when the user enter the new message, submit to the socket client to socket server
+            $('#messageForm').submit(function (e) {
                 e.preventDefault();
-                socket.emit('send message', $message.val());
-                $message.val(''); 
+                socket.emit('send message', $('#message').val());
+                $('#message').val(''); 
             });
 
             // receive the message back from the socket server
@@ -61,7 +51,7 @@
                 var milliseconds = date.getDate();
                 var time = moment(milliseconds).format("H:MMa");
 
-               $textbox.append($chat.prepend('<div><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time +'</div>'));
+               $('#messageBox').append( $('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time +'</div>'));
 
             });
 
