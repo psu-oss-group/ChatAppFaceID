@@ -8,8 +8,9 @@ var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var faceapi = require("face-api.js");
 var cv = require('opencv4nodejs');
-var rectColor = [0, 255, 0];
-var rectThickness = 2;
+var keypress = require('keypress');
+keypress(process.stdin);
+
  
 
 app.set('view engine', 'hbs');
@@ -56,6 +57,7 @@ app.get('/', function(req, res) {
   res.render('index', {
     user: req.user
   });
+  
 });
 
 app.get('/login', function(req, res) {
@@ -88,72 +90,74 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-app.get('/faceID', function(req, res) {
-   res.render("faceLogin");
+app.get('/faceID', function (req, res) {
+  res.render("faceLogin");
 
-  // const webcam = new cv.VideoCapture(0);
+  const webcam = new cv.VideoCapture(0);
+  var frameRate = 100; //100ms
 
-  // webcam.set(cv.CAP_PROP_FRAME_HEIGHT,300);
-  // webcam.set(cv.CAP_PROP_FRAME_WIDTH,300);
- 
-  // setInterval(() => {
-  //   const photo = webcam.read(); // return Mat
-  //     const image = cv.imencode('.jpg',photo).toString('base64');
-  //     io.emit('image',image);
-      
-  // },100)
+  webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 400);
+  webcam.set(cv.CAP_PROP_FRAME_WIDTH, 400);
 
-
-const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
-  
-const mat  = cv.imread("people.jpg"); // return mat
-const grayImg = mat.bgrToGray();
-const faces_Rects = classifier.detectMultiScale(grayImg).objects; // return the array of faces with rectangular position
-console.log(faces_Rects[0].height);
-
-//cv.imwrite('people_2.jpg',grayImg.getRegion(faces_Rects[1]));
-const outBase64 = cv.imencode('.jpeg',grayImg.getRegion(faces_Rects[1])).toString('base64');
-console.log(outBase64);
-
-
-  // draw face detection
-  const blue = new cv.Vec(255, 0, 0);
-  const thickness = 2;
-  mat.drawRectangle(
-    new cv.Point(faces_Rects[0].x, faces_Rects[0].y),
-    new cv.Point(faces_Rects[0].x + faces_Rects[0].width,faces_Rects[0].y + faces_Rects[0].height),
-    blue,
-    cv.LINE_8,
-    thickness
-  );
-  
-  cv.imwrite('people_2.jpg',mat);
-
-  setInterval(()=>{
-  io.emit('image',outBase64);
-
-},1000);
-console.log(faces_Rects[0]);
-
-
-// by nesting callbacks
-//cv.imreadAsync('./people.jpg', (err, img) => {
- // if (err) { return console.error(err); }
-  //const grayImg = img.bgrToGray();
- //faces = classifier.detectMultiScale(grayImg).objects;
-
-  // for (face in faces) {
-  //   console.log(face.objects);
-  //   cv.drawDetection(img, [face.x, face.y], [face.width, face.height], rectColor, rectThickness);
+  setInterval(() => {
+    const FRAME = webcam.read();
+    const gray = FRAME.bgrToGray();
     
-  // }
-  //cv.imshow('i mg',img);
- // cv.imwrite("check.jpg",img.getRegion(faces[0]))
-//  return grayImg.getRegion(faces[0]);
-//const outBase64 =  cv.imencode('.jpg', img.getRegion(faces[0])).toString('base64'); // Perform base64 encoding
-//const htmlImg='<img src=data:image/jpeg;base64,'+outBase64 + '>';
-//io.emit('image',outBase64);
-//})
+
+    var canvas = detect(gray, FRAME); //canvas is a mat
+    var canvas1 = detect_smile(gray,FRAME);
+    const outBase64 = cv.imencode('.jpg', canvas).toString('base64');
+   // const outBase64_smile = cv.imencode('.jpg', canvas1).toString('base64');
+
+
+    io.emit('image', outBase64); //, smile: outBase64_smile});
+    
+  }, frameRate);
+
+  // FUNCTION TO DETECT FACE ON CAMERA, IN CASE YOU WANT TO USE IT
+   function detect(grayImg, mat) {
+    const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
+
+    const faces_Rects = classifier.detectMultiScale(grayImg).objects; // return the array of faces with rectangular position
+    if (faces_Rects.length == 0) {
+      //res.render("hey yoy, do you know that you are supposed to show your face in front of the camera to use the Smilling Face ID?");
+      return null;
+    }
+    else {
+      // draw face detection
+      const red = new cv.Vec(0, 0, 255); // blue, green, red
+      mat.drawRectangle(
+        new cv.Point(faces_Rects[0].x, faces_Rects[0].y),
+        new cv.Point(faces_Rects[0].x + faces_Rects[0].width, faces_Rects[0].y + faces_Rects[0].height),
+        red,
+        cv.LINE_4 // thichkness
+      );
+      return mat;
+    }
+  }
+  
+  // FUNCTION to detect smile
+  function detect_smile(grayImg, mat) {
+    const blue = new cv.Vec(255, 0, 0);
+    // detect smile
+    const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
+    smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects;
+    if (smiles_Rects.length != 0) {
+
+      console.log("SMILE" + smiles_Rects);
+
+      mat.drawRectangle(
+        new cv.Point(smiles_Rects[0].x, smiles_Rects[0].y),
+        new cv.Point(smiles_Rects[0].x + smiles_Rects[0].width, smiles_Rects[0].y + smiles_Rects[0].height),
+        blue,
+        cv.LINE_4 // thichkness
+      );
+      return mat;
+    }
+    else {
+      return null;
+    }
+  }
 })
 
 server.listen(port, function() {

@@ -1,71 +1,39 @@
 <html>
-    <head>
-		<meta charset="utf-8">
-		<title>Happy Chat</title>
-		{{!-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script src="/socket.io/socket.io.js"></script>
-    </head>
-    <body>
-        
-        
-        {{!-- <video id ="video" width="720" height="560" autoplay muted></video> --}}
-        <canvas id="mycanvas" src=""></canvas>
-        <img id = "image"> 
-        
-            {{!-- <canvas id="canvas-video" width="640" height="480"></canvas>
- 
-     <script>
-            
-            
-            var socket = io();
 
-var canvas = document.getElementById('video');
-var context = canvas.getContext('2d');
-var img = new Image();
+<head>
+  <meta charset="utf-8">
+  <title>Happy Chat</title>
+  {{!-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
 
-// show loading notice
-context.fillStyle = '#333';
-context.fillText('Loading...', canvas.width/2-30, canvas.height/3);
+<body>
 
-socket.on('frame', function (data) {
-  // Reference: http://stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
-  var uint8Arr = new Uint8Array(data.buffer);
-  var str = String.fromCharCode.apply(null, uint8Arr);
-  var base64String = btoa(str);
 
-  img.onload = function () {
-    context.drawImage(this, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = 'data:image/png;base64,' + base64String;
-});
-        </script>  --}}
-        {{!-- <script>
-            function startVideo() {
-                navigator.getUserMedia(
-                    {video:{} },
-                    stream => video.srcObject = stream,
-                    err => console.error(err.message)
-                )
-            }
-            startVideo()
-           // console.log(faceapi.nets);
-        </script> --}}
-        {{!-- <img id="image"> --}}
-        <script>
-            const socket = io();
+  <img id="image">
+  <h1 id ="Messg"> </h1>
 
-            socket.on('image',(data) =>{
-                console.log('data', data);
-                var imageID = document.getElementById("image");
-               imageID.src = `data:image/jpeg;base64,${data}`;
-              //  var ctx = document.getElementById("mycanvas");
-              //  document.querySelector('body').appendChild(ctx);
+  <script>
+    const socket = io();
+    var html = '';
+    socket.on('image', (data) => {
+      console.log('data'+data.face);
+      if (data == null) {
+        html += "where is ur smile?";
+        $("#Messg").html(html);
+      }
+      
+      var imageID = document.getElementById("image");
+      imageID.src = `data:image/jpeg;base64,${data}`;
+      //  var ctx = document.getElementById("mycanvas");
+      //  document.querySelector('body').appendChild(ctx);
 
-            });
-        </script>
-    </body>
+    });
+  </script>
+</body>
+
 </html>
