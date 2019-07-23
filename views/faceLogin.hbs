@@ -13,25 +13,19 @@
 
 <body>
 
+  <h1 id="Messg"> </h1>
 
-  <img id="image">
-  <h1 id ="Messg"> </h1>
+  <img id="image1" height="400" width="500">
 
   <script>
-    const socket = io();
-    var html = '';
-    socket.on('image', (data) => {
-      console.log('data'+data.face);
-      if (data == null) {
-        html += "where is ur smile?";
-        $("#Messg").html(html);
-      }
-      
-      var imageID = document.getElementById("image");
-      imageID.src = `data:image/jpeg;base64,${data}`;
-      //  var ctx = document.getElementById("mycanvas");
-      //  document.querySelector('body').appendChild(ctx);
+    $(document).ready(function () {
 
+      var html = 'You are not smilling';
+      $("#Messg").append(html);
+      const socket = io();
+      socket.on('image', function (data) {
+        $("#image1").attr("src", data);
+      });
     });
   </script>
 </body>
