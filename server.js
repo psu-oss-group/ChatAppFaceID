@@ -101,8 +101,6 @@ app.get("/logout", function(req, res) {
 });
 
 app.get("/faceID", function(req, res) {
-  //res.render("faceLogin");
-
   cam.capture("test_pic1", {}, function(err, data) {
     if (err) throw err;
     console.log(data);
@@ -114,7 +112,7 @@ app.get("/faceID", function(req, res) {
 
     if (result == 0) {
       res.render("faceLogin");
-      console.log("NO FACE");
+      console.log("No smilling face detected ");
       cv.imwrite("result_NOSMILE.jpg", mat);
       io.on("connection", function(socket) {
         fs.readFile("result_NOSMILE.jpg", function(err, buff) {
@@ -135,8 +133,8 @@ app.get("/faceID", function(req, res) {
       const blue = new cv.Vec(255, 0, 0);
       // detect smile
       const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
-      smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects;
-      console.log("SMILE" + smiles_Rects);
+      smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects; //return the array of smiling object with the rectangular size
+      // console.log("SMILE" + smiles_Rects);
 
       if (smiles_Rects.length <= 0) {
         console.log("LENGTH" + smiles_Rects.length);

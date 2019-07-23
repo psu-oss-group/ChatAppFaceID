@@ -20,7 +20,7 @@
   <script>
     $(document).ready(function () {
 
-      var html = 'You are not smilling';
+      var html = 'You are not smilling. Click Home to return back to the login page';
       $("#Messg").append(html);
       const socket = io();
       socket.on('image', function (data) {
