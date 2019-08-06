@@ -45,14 +45,15 @@
         // receive the message back from the socket server
         socket.on('new message', function (data) {
             console.log('data.name: ' + data.name);
-            console.log(data.color);
 
-	    var date = new Date();
-            var milliseconds = date.getDate();
-            var time = moment(milliseconds).format("H:MMa");
+	        var date = new Date();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var time = moment(date).format("H:MMa");
+            console.log(time)
 
-            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
-
+            //$('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
+$('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '@'  + hour +':'+min + '</div>'));
         });
 
         // get the users who are online

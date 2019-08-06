@@ -6,8 +6,9 @@ var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
+var cv = require("opencv4nodejs");
+var cam = require("node-webcam");
 var fs = require("fs");
-var path = require("path");
 
 app.set("view engine", "hbs");
 app.use(bodyParser.json());
@@ -94,6 +95,61 @@ app.get("/account", ensureAuthenticated, function(req, res) {
 app.get("/logout", function(req, res) {
   req.logout();
   res.redirect("/");
+});
+
+app.get("/faceID", function(req, res) {
+  cam.capture("test_pic1", {}, function(err, data) {
+    if (err) throw err;
+    console.log(data);
+
+    const mat = new cv.imread("test_pic1.jpg");
+    const gray = mat.bgrToGray();
+
+    var result = detect_smile(gray, mat);
+
+    if (result == 0) {
+      res.render("faceLogin");
+      console.log("No smilling face detected ");
+      cv.imwrite("result_NOSMILE.jpg", mat);
+      io.on("connection", function(socket) {
+        fs.readFile("result_NOSMILE.jpg", function(err, buff) {
+          socket.emit(
+            "image",
+            "data:image/jpg;base64," + buff.toString("base64")
+          );
+        });
+      });
+    } else {
+      //const outBase64 = cv.imencode(".jpg", result).toString("base64");
+      cv.imwrite("result_SMILE.jpg", result);
+      res.render("chatroom");
+    }
+
+    //FUNCTION to detect smile
+    function detect_smile(grayImg, mat) {
+      const blue = new cv.Vec(255, 0, 0);
+      // detect smile
+      const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
+      smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects; //return the array of smiling object with the rectangular size
+      // console.log("SMILE" + smiles_Rects);
+
+      if (smiles_Rects.length <= 0) {
+        console.log("LENGTH" + smiles_Rects.length);
+        return 0;
+      } else {
+        mat.drawRectangle(
+          new cv.Point(smiles_Rects[0].x, smiles_Rects[0].y),
+          new cv.Point(
+            smiles_Rects[0].x + smiles_Rects[0].width,
+            smiles_Rects[0].y + smiles_Rects[0].height
+          ),
+          blue,
+          cv.LINE_4 // thichkness
+        );
+        return mat;
+      }
+    }
+  });
 });
 
 server.listen(port, function() {
