@@ -4,21 +4,15 @@
 <head>
 	<meta charset="utf-8">
 	<title>Happy Chat</title>
-	{{!-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-		crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-		crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+	</script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+	</script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
 </head>
 <style>
 	body {
@@ -28,7 +22,6 @@
 	}
 
 	#messageBox {
-		background-image: url(https://www.wallpapermaiden.com/image/2017/01/14/anime-girls-chibi-cute-animal-ears-tea-short-hair-anime-12052.jpg);
 		background-size: 700px;
 		background-repeat: no-repeat;
 		overflow-y: scroll;
@@ -46,23 +39,34 @@
 
 <body>
 	<!-- Just an image -->
-	<nav class="navbar navbar-dark bg-dark">
-		<a class="navbar-brand" href="/">
-			<img src="https://avatars2.githubusercontent.com/u/52468523?s=200&v=4" width="30" height="30" alt="">
-		</a>
 
-		{{#if user}}
-		<p>
-			<a href="/">Home</a> |
-			<a href="/account">Account</a> |
-			<a href="/logout">Log Out</a>
-		</p>
-		{{else}}
-		<p>
-			<a href="/">Home</a> |
-			<a href="/login">Log In</a>
-		</p>
-		{{/if}}
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="collapse navbar-collapse">
+			<a class="navbar-brand" href="/">
+				<img src="https://avatars2.githubusercontent.com/u/52468523?s=200&v=4" width="30" height="30" alt="">
+				HappyChat</a>
+
+		</div>
+
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+			aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="navbar-nav">
+			{{#if user}}
+			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="/account">Account</a>
+			<a class="nav-item nav-link" href="/logout">Log out</a>
+			{{else}}
+
+			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="/login">Log in</a>
+
+			{{/if}}
+		</div>
 	</nav>
 
 	{{{ body }}}

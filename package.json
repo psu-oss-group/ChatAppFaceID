@@ -18,10 +18,8 @@
   },
   "homepage": "https://github.com/psu-oss-group/ChatAppFaceID#readme",
   "dependencies": {
-    "canvas": "^2.5.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "face-api.js": "^0.20.1",
     "hbs": "^4.0.4",
     "keypress": "^0.2.1",
     "node-webcam": "^0.5.0",
