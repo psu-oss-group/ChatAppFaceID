@@ -88,6 +88,7 @@ app.get("/account", ensureAuthenticated, function(req, res) {
   res.render("account", {
     user: req.user
   });
+  console.log(req.user)
 });
 
 app.get("/logout", function(req, res) {
@@ -95,6 +96,9 @@ app.get("/logout", function(req, res) {
   res.redirect("/");
 });
 
+server.listen(port, function() {
+  console.log("Listening on http://localhost:" + `${port}`);
+});
 
 // Simple route middleware to ensure user is authenticated.
 function ensureAuthenticated(req, res, next) {

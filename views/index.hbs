@@ -1,5 +1,5 @@
 {{#if user}}
-<h2 style="color:cornsilk">Hello, {{ user.displayName }}.</h2>
+<h2 style="color:black">Hello, {{ user.displayName }}.</h2>
 <div class="row" id='chatArea'>
 
     <div class="col-md-4">
@@ -47,7 +47,7 @@
             console.log('data.name: ' + data.name);
             console.log(data.color);
 
-            var date = new Date();
+	    var date = new Date();
             var milliseconds = date.getDate();
             var time = moment(milliseconds).format("H:MMa");
 
@@ -67,7 +67,6 @@
     });
 </script>
 {{else}}
-<h2 style="color:darkgoldenrod">Welcome! Please <a href="/auth/google" style="color:white">Login with Google</a>.</h2>
+<h2 style="color:darkgoldenrod">Welcome! Please <a href="/auth/google"">Login with Google</a>.</h2>
 <br>
-<h2> <a href="/faceId" id="faceID" style="color:darkgoldenrod">Login with SmileID</a>.</h2>
 {{/if}}
