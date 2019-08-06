@@ -3,6 +3,7 @@
         <h3>Online Users</h3>
         <ul class="list-group" id='users'> </ul>
     </div>
+    <div id="counter"></div>
 </div>
 
 <div class="col-md-8">
@@ -28,6 +29,12 @@
 </div>
 
 <script>
+    $(function () {
+        var s = io.connect("localhost:3000/faceID")
+        s.on("timer", function (data) {
+            $('#counter').html(data.countdown);
+        }
+    })
     $(function () {
         // connect socket
         var socket = io();

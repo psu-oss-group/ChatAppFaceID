@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #timeCount {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        font-size: 12em;
+    }
+
+    #smile {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        font-size: 12em;
+    }
+
+    #blinking {
+        blackground: black;
+    }
+</style>
+
+<body>
+    <div id="timeCount"></div>
+    <div id="smile"></div>
+
+    <script>
+        var count = 3;
+        function handleTime() {
+
+            if (count < 0) {
+                clearInterval(time);
+
+                $('#timeCount').hide();
+                blinking();
+                setTimeout(function () {
+                    window.location.href = "/faceID"
+                }, 1000);
+
+            }
+            else {
+                $("#timeCount").html(count);
+                --count;
+            }
+        }
+        var time = setInterval(function () {
+            handleTime();
+        }, 1000)
+
+        function blinking() {
+            $('#smile').html("Cheer");
+            setInterval(function () {
+                $('#smile').show();
+                $("body").css("background-color", 'grey');
+
+            }, 300)
+            //$("body").css("background-color", 'grey');
+            setTimeout(function () {
+
+                $("body").css("background-color", 'white');
+
+            }, 1000);
+
+            $('#countdown').hide();
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
