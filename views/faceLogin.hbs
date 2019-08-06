@@ -14,16 +14,19 @@
 <body>
 
   <h1 id="Messg"> </h1>
+  <h1 id="Messg2"> </h1>
 
   <img id="image1" height="400" width="500">
+  <img id="image2" height="400" width="500" style="visibility: hidden">
 
   <script>
     $(document).ready(function () {
-
-      var html = 'You are not smilling. Click Home to return back to the login page';
-      $("#Messg").append(html);
       const socket = io();
-      socket.on('image', function (data) {
+
+      socket.on('imageNotSmile', function (data) {
+        var html = 'You are not smilling. Click Home to return back to the login page';
+        $("#Messg").append(html);
+        console.log(data);
         $("#image1").attr("src", data);
       });
     });

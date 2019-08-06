@@ -122,15 +122,18 @@ app.get("/faceID", function(req, res) {
         io.on("connection", function(socket) {
           fs.readFile("result_NOSMILE.jpg", function(err, buff) {
             socket.emit(
-              "image",
-              "data:image/jpg;base64," + buff.toString("base64")
+              "imageNotSmile",
+              "data:image/jpg;base64," + buff.toString("base64"),
+              function(data) {
+                console.log(data);
+              }
             );
           });
         });
       } else {
         //const outBase64 = cv.imencode(".jpg", result).toString("base64");
-        cv.imwrite("result_SMILE.jpg", result);
         isFace = true;
+        cv.imwrite("result_SMILE.jpg", result);
         res.redirect("/");
       }
 
