@@ -46,14 +46,13 @@
         socket.on('new message', function (data) {
             console.log('data.name: ' + data.name);
 
-	        var date = new Date();
+            var date = new Date();
             var hour = date.getHours();
             var min = date.getMinutes();
             var time = moment(date).format("H:MMa");
             console.log(time)
-
-            //$('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
-$('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '@'  + hour +':'+min + '</div>'));
+            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name +
+                '</strong>' + ': ' + data.msg + '@' + hour + ':' + min + '</div>'));
         });
 
         // get the users who are online
@@ -119,7 +118,8 @@ $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data
             var milliseconds = date.getDate();
             var time = moment(milliseconds).format("H:MMa");
 
-            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name + '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
+            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name +
+                '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
 
         });
 
@@ -145,21 +145,36 @@ $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data
             var name = prompt("Enter your preferred username:");
             if (name == null || name == "") {
                 name = prompt("No new username is chosen");
-            }
-            else {
+            } else {
                 return name;
             }
         }
     });
-
 </script>
 
 
 {{else}}
-<h2 style="color:darkgoldenrod">Welcome! Please <a href="/auth/google" style="color:white">Login with Google</a>.</h2>
-<br>
-<h2> <a href="/countTime" style="color:darkgoldenrod">Login with SmileID</a>.</h2>
 
-{{!-- <h2> <a href="/faceId" id="faceID" style="color:darkgoldenrod">Login with SmileID</a>.</h2> --}}
+
+<div class="jumbotron">
+    <h1 class="display-4">Welcome!</h1>
+    <p class="lead">
+        This is a simple web chat (or Bulletin Board System) that allow user exchanging messages with other users through chat
+        room (or public message board). 
+    </p>
+    <br/>
+    
+    <p> For the live Demo, you can either: </p>
+    <a class="btn btn-lg btn-outline-danger" href="/auth/google" role="button">Login with <i class="fab fa-google-plus-g"></i></a> or 
+    <a class="btn btn-lg btn-outline-success" href="/countTime" role="button">Login with your smile <i class="far fa-smile-wink"></i></a> 
+    <hr class="my-4">
+    <p>If you are intested about this project, you can visit our github page for more information.</p>
+    <p class="lead">
+        <a class="btn btn-lg btn-outline-primary" href="https://psu-oss-group.github.io/ChatAppFaceID/" role="button"><i class="fab fa-github"></i> Learn more</a>
+    </p>
+</div>
+
+
+
 {{/if}}
 {{/if}}

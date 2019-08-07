@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var session = require("express-session");
 var port = process.env.PORT || 3000;
 var isFace = false;
-var init;
 
 connections = [];
 users = [];
@@ -107,59 +106,41 @@ app.get("/faceID", function(req, res) {
   //}, 2000);
   // capture the smiling ID
   function capture() {
-    cam.capture("test_pic1", {}, function(err, data) {
-      if (err) throw err;
-      console.log(data);
-
-      const mat = new cv.imread("test_pic1.jpg");
-      const gray = mat.bgrToGray();
-
-      var result = detect_smile(gray, mat);
-
-      if (result == 0) {
+    cam.capture("test_pic", {}, function(err, data) {
+      if (err) {
         res.render("faceLogin");
-        console.log("No smilling face detected ");
-        cv.imwrite("result_NOSMILE.jpg", mat);
+        console.log(error);
         io.on("connection", function(socket) {
-          fs.readFile("result_NOSMILE.jpg", function(err, buff) {
-            socket.emit(
-              "imageNotSmile",
-              "data:image/jpg;base64," + buff.toString("base64"),
-              function(data) {
-                console.log(data);
-              }
-            );
-          });
-        });
+          fs.readFile("placeholder.jpg", function(err, buff) {
+            socket.emit("imageNotSmile", "data:image/jpg;base64," + buff.toString("base64"),function(data) {
+              console.log(data);
+            });
+          })
+        })
       } else {
-        //const outBase64 = cv.imencode(".jpg", result).toString("base64");
-        isFace = true;
-        cv.imwrite("result_SMILE.jpg", result);
-        res.redirect("/");
-      }
+        console.log(data);
 
-      //FUNCTION to detect smile
-      function detect_smile(grayImg, mat) {
-        const blue = new cv.Vec(255, 0, 0);
-        // detect smile
-        const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
-        smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects; //return the array of smiling object with the rectangular size
-        // console.log("SMILE" + smiles_Rects);
+        const mat = new cv.imread("test_pic.jpg");
+        const gray = mat.bgrToGray();
 
-        if (smiles_Rects.length <= 0) {
-          console.log("LENGTH" + smiles_Rects.length);
-          return 0;
+        var result = detect_smile(gray, mat);
+
+        if (result == 0) {
+          res.render("faceLogin");
+          console.log("No smilling face detected ");
+          cv.imwrite("result_NOSMILE.jpg", mat);
+          io.on("connection", function(socket) {
+            fs.readFile("result_NOSMILE.jpg", function(err, buff) {
+              socket.emit("imageNotSmile", "data:image/jpg;base64," + buff.toString("base64"), function(data) {
+                console.log(data);
+              });
+            });
+          });
         } else {
-          mat.drawRectangle(
-            new cv.Point(smiles_Rects[0].x, smiles_Rects[0].y),
-            new cv.Point(
-              smiles_Rects[0].x + smiles_Rects[0].width,
-              smiles_Rects[0].y + smiles_Rects[0].height
-            ),
-            blue,
-            cv.LINE_4 // thichkness
-          );
-          return mat;
+          //const outBase64 = cv.imencode(".jpg", result).toString("base64");
+          isFace = true;
+          cv.imwrite("result_SMILE.jpg", result);
+          res.redirect("/");
         }
       }
     });
@@ -181,6 +162,31 @@ function ensureAuthenticated(req, res, next) {
     console.log("Please login with valid user");
     req.logout();
     res.redirect("/login");
+  }
+}
+
+//FUNCTION to detect smile
+function detect_smile(grayImg, mat) {
+  const blue = new cv.Vec(255, 0, 0);
+  // detect smile
+  const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
+  smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects; //return the array of smiling object with the rectangular size
+  // console.log("SMILE" + smiles_Rects);
+
+  if (smiles_Rects.length <= 0) {
+    console.log("LENGTH" + smiles_Rects.length);
+    return 0;
+  } else {
+    mat.drawRectangle(
+      new cv.Point(smiles_Rects[0].x, smiles_Rects[0].y),
+      new cv.Point(
+        smiles_Rects[0].x + smiles_Rects[0].width,
+        smiles_Rects[0].y + smiles_Rects[0].height
+      ),
+      blue,
+      cv.LINE_4 // thichkness
+    );
+    return mat;
   }
 }
 
