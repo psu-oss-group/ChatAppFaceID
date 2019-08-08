@@ -61,7 +61,9 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
 						<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
-							<a class="nav-item nav-link active" href="/account">Account</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-item nav-link active" href="/account">Account</a>
 						</li>
 				</ul>
 				
@@ -70,6 +72,24 @@
 						<a class="nav-item nav-link active" href="/logout">Log out</a>
 					</li>
 				</ul>
+
+				{{else if face}}
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-item nav-link active" href="/auth/google">Login</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-item nav-link active" href="/logout">Log out</a>
+					</li>
+				</ul>
+
+
 				{{else}}
 
 		    <ul class="navbar-nav mr-auto">
@@ -80,7 +100,7 @@
 				
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-item nav-link active" href="/auth/google">Log in</a>
+						<a class="nav-item nav-link active" href="/auth/google">Login</a>
 					</li>
 				</ul>
 
