@@ -178,22 +178,29 @@ function detect_smile(grayImg, mat) {
   const blue = new cv.Vec(255, 0, 0);
   // detect smile
   const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
-  smiles_Rects = smile.detectMultiScale(grayImg, 1.8, 20).objects; //return the array of smiling object with the rectangular size
+  smiles_Rects = smile.detectMultiScale(grayImg, {
+    scaleFactor: 1.8,
+    minNeighbors: 10,
+    minSize: new cv.Size(150, 150),
+    maxSize: new cv.Size(300, 300)
+  }).objects; //return the array of smiling object with the rectangular size
   // console.log("SMILE" + smiles_Rects);
 
   if (smiles_Rects.length <= 0) {
     console.log("LENGTH" + smiles_Rects.length);
     return 0;
   } else {
-    mat.drawRectangle(
-      new cv.Point(smiles_Rects[0].x, smiles_Rects[0].y),
-      new cv.Point(
-        smiles_Rects[0].x + smiles_Rects[0].width,
-        smiles_Rects[0].y + smiles_Rects[0].height
-      ),
-      blue,
-      cv.LINE_4 // thichkness
-    );
+    for (var i = 0; i < smiles_Rects.length; ++i) {
+      mat.drawRectangle(
+        new cv.Point(smiles_Rects[i].x, smiles_Rects[i].y),
+        new cv.Point(
+          smiles_Rects[i].x + smiles_Rects[i].width,
+          smiles_Rects[i].y + smiles_Rects[i].height
+        ),
+        blue,
+        cv.LINE_4 // thichkness
+      );
+    }
     return mat;
   }
 }
