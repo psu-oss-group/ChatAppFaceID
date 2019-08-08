@@ -26,7 +26,7 @@ ChatAppFaceID is a web chat (or Bulletin Board System) that allow user exchangin
 
 ## Tech stack, Pre-reqs and setup
 
-In the dependencies of your package.json should have Nodejs, express, Socket.io, Opencv4node, passport, and passport-google-oauth.
+The dependencies of your package.json should include Nodejs, express, Socket.io, Opencv4node, passport, and passport-google-oauth.
 
 ## Build
 
