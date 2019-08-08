@@ -93,6 +93,7 @@ app.get("/account", ensureAuthenticated, function(req, res) {
 
 app.get("/logout", function(req, res) {
   req.logout();
+  isFace = false;
   res.redirect("/");
 });
 
