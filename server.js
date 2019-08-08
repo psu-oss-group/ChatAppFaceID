@@ -107,12 +107,12 @@ app.get("/faceID", function(req, res) {
   //}, 2000);
   // capture the smiling ID
   function capture() {
-    cam.capture("test_pic", {}, function(err, data) {
+    cam.capture("public/test_pic", {}, function(err, data) {
       if (err) {
         res.render("faceLogin");
         console.log(error);
         io.on("connection", function(socket) {
-          fs.readFile("placeholder.jpg", function(err, buff) {
+          fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
             socket.emit(
               "imageNotSmile",
               "data:image/jpg;base64," + buff.toString("base64"),
@@ -125,7 +125,7 @@ app.get("/faceID", function(req, res) {
       } else {
         console.log(data);
 
-        const mat = new cv.imread("test_pic.jpg");
+        const mat = new cv.imread("public/test_pic.jpg");
         const gray = mat.bgrToGray();
 
         var result = detect_smile(gray, mat);
@@ -133,9 +133,9 @@ app.get("/faceID", function(req, res) {
         if (result == 0) {
           res.render("faceLogin");
           console.log("No smilling face detected ");
-          cv.imwrite("result_NOSMILE.jpg", mat);
+          cv.imwrite("public/result_NOSMILE.jpg", mat);
           io.on("connection", function(socket) {
-            fs.readFile("result_NOSMILE.jpg", function(err, buff) {
+            fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
               socket.emit(
                 "imageNotSmile",
                 "data:image/jpg;base64," + buff.toString("base64"),
@@ -148,7 +148,7 @@ app.get("/faceID", function(req, res) {
         } else {
           //const outBase64 = cv.imencode(".jpg", result).toString("base64");
           isFace = true;
-          cv.imwrite("result_SMILE.jpg", result);
+          cv.imwrite("public/result_SMILE.jpg", result);
           res.redirect("/");
         }
       }
