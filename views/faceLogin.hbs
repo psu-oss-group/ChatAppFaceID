@@ -1,36 +1,22 @@
-<html>
+<script>
+  $(document).ready(function () {
+    const socket = io();
 
-<head>
-  <meta charset="utf-8">
-  <title>Happy Chat</title>
-  {{!-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-</head>
-
-<body>
-
-  <h1 id="Messg"> </h1>
-  <h1 id="Messg2"> </h1>
-
-  <img id="image1" height="400" width="500">
-  <img id="image2" height="400" width="500" style="visibility: hidden">
-
-  <script>
-    $(document).ready(function () {
-      const socket = io();
-
-      socket.on('imageNotSmile', function (data) {
-        var html = 'You are not smilling. Click Home to return back to the login page';
-        $("#Messg").append(html);
-        console.log(data);
-        $("#image1").attr("src", data);
-      });
+    socket.on('imageNotSmile', function (data) {
+      console.log(data);
+      $("#image1").attr("src", data);
     });
-  </script>
-</body>
+  });
 
-</html>
+</script>
+<div class="text-center" style="margin-top: 100px;">
+  <div class="alert alert-danger">
+    <strong>You are not smilling</strong> <i class="far fa-smile-wink"></i>
+  </div>
+  <h3>Let's try <a href="/countTime">again</a>!</h3>
+</div>
+
+<div class="text-center" style="margin-top: 100px">
+<img id="image1" height="400" width="500">
+{{!-- <img id="image2" height="400" width="500" style="visibility: hidden"> --}}
+</div>
