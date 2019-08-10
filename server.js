@@ -110,7 +110,7 @@ app.get("/faceID", function(req, res) {
     cam.capture("public/test_pic", {}, function(err, data) {
       if (err) {
         res.render("faceLogin");
-        console.log(error);
+        console.log(err);
         io.on("connection", function(socket) {
           fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
             socket.emit(

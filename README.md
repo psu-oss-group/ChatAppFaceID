@@ -45,6 +45,19 @@ $ node server.js
 
 Go to: [localhost:3000/](http://localhost:3000/)
 
+## Docker
+```shell
+$ docker pull ronniesong0809/chatappfaceid
+$ docker images
+```
+run the docker image by using the image id.
+```shell
+$ docker run -p 3000:3000 --device=/dev/video0:/dev/video0 [image_id]
+or
+$ docker run -p 3001:3000 --privileged -v /dev/video0:/dev/video0 [image_id]
+```
+Go to: [localhost:3000/](http://localhost:3000/)
+
 ## References
 
 - [Opencv4node](https://github.com/justadudewhohacks/opencv4nodejs)
