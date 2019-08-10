@@ -114,10 +114,9 @@ app.get("/faceID", function(req, res) {
         io.on("connection", function(socket) {
           fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
             socket.emit(
-              "imageNotSmile",
-              "data:image/jpg;base64," + buff.toString("base64"),
-              function(data) {
-                console.log(data);
+              "imageNotSmile", {
+                image: "data:image/jpg;base64," + buff.toString("base64"), function(data) {console.log("send err: " + data);},
+                message: err
               }
             );
           });
@@ -127,20 +126,19 @@ app.get("/faceID", function(req, res) {
 
         const mat = new cv.imread("public/test_pic.jpg");
         const gray = mat.bgrToGray();
-
+        cv.imwrite("public/result_GRAY.jpg", gray);
         var result = detect_smile(gray, mat);
 
         if (result == 0) {
           res.render("faceLogin");
-          console.log("No smilling face detected ");
+          console.log("No smilling face detected");
           cv.imwrite("public/result_NOSMILE.jpg", mat);
           io.on("connection", function(socket) {
             fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
               socket.emit(
-                "imageNotSmile",
-                "data:image/jpg;base64," + buff.toString("base64"),
-                function(data) {
-                  console.log(data);
+                "imageNotSmile", {
+                  image: "data:image/jpg;base64," + buff.toString("base64"),function(data) {console.log("send image:" + data);},
+                  message: "No smilling face detected"
                 }
               );
             });

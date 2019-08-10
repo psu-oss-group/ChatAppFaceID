@@ -4,19 +4,20 @@
 
     socket.on('imageNotSmile', function (data) {
       console.log(data);
-      $("#image1").attr("src", data);
+      $("#image").attr("src", data.image);
+      $("#message").attr("src", data.message);
     });
   });
 
 </script>
 <div class="text-center" style="margin-top: 100px;">
   <div class="alert alert-danger">
-    <strong>You are not smilling</strong> <i class="far fa-smile-wink"></i>
+    <strong id="message">message</strong> <i class="far fa-smile-wink"></i>
   </div>
   <h3>Let's try <a href="/countTime">again</a>!</h3>
 </div>
 
 <div class="text-center" style="margin-top: 100px">
-<img id="image1" height="400" width="500">
+<img id="image" height="400" width="500">
 {{!-- <img id="image2" height="400" width="500" style="visibility: hidden"> --}}
 </div>
