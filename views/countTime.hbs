@@ -16,15 +16,11 @@
     }
 </style>
 
-
-
-
 <script>
     var count = 3;
 
     function handleTime() {
-
-        if (count < 0) {
+        if (count < 1) {
             clearInterval(time);
 
             $('#timeCount').hide();
@@ -43,7 +39,7 @@
     }, 1000)
 
     function blinking() {
-        $('#smile').html("Smileeeee");
+        $('#smile').html("SMILEEE!");
         setInterval(function () {
             $('#smile').show();
             $("body").css("background-color", 'grey');

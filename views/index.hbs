@@ -1,180 +1,186 @@
 {{#if user}}
-<h2 style="color:black">Hello, {{ user.displayName }}.</h2>
-<div class="row" id='chatArea'>
-
-    <div class="col-md-4">
-        <div class="well" style="background-color: rgb(22, 105, 173);">
-            <h3>Online Users</h3>
-            <ul class="list-group" id='users'> </ul>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="chat" id="chat"></div>
-
-        <form id="messageForm">
-
-            <div class="input-group">
-                <textarea class="form-control" id="message" placeholder="Enter message"></textarea>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary" value="Send Message">Submit</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center border">
+                    <h3>Users</h3>
+                    <ul class="list-group scrollable m-2" id='users' style="height: 500px"> </ul>
                 </div>
-
+                
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        ...
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-
-                <br />
-                <div class="messageBox" id="messageBox"> </div>
-
+            
+            <div class="col-9">
+                <div class="border">
+                    <h3 class="text-center">Message</h3>
+                    <div class="messageBox scrollable border m-2" id="messageBox"  style="height: 500px">
+                        <ul class="h-80" id="chat"></ul>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    $(function () {
-        // connect socket
-        var socket = io();
-        // when the user enter the new message, submit to the socket client to socket server
-        $('#messageForm').submit(function (e) {
-            e.preventDefault();
-            socket.emit('send message', $('#message').val());
-            $('#message').val('');
-        });
-
-        // receive the message back from the socket server
-        socket.on('new message', function (data) {
-            console.log('data.name: ' + data.name);
-
-            var date = new Date();
-            var hour = date.getHours();
-            var min = date.getMinutes();
-            var time = moment(date).format("H:MMa");
-            console.log(time)
-            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name +
-                '</strong>' + ': ' + data.msg + '@' + hour + ':' + min + '</div>'));
-        });
-
-        // get the users who are online
-        socket.on('get users', function (data) {
-            console.log('online users: ' + data);
-            var html = '';
-            for (i = 0; i < data.length; ++i) {
-                html += '<li class="list-group-item">' + data[i] + '</li>'
-            }
-            $('#users').html(html);
-        })
-    });
-</script>
-{{else}}
-{{#if face}}
-
-<div class="row" id='chatArea'>
-
-    <div class="col-md-4">
-        <div class="well" style="background-color: rgb(22, 105, 173);">
-            <h3>Online Users</h3>
-            <ul class="list-group" id='users'> </ul>
         </div>
-        <button type="submit" class="btn btn-warning" id="changeUsername">Change Username</button>
 
-    </div>
-
-    <div class="col-md-8">
-        <div class="chat" id="chat"></div>
-
-        <form id="messageForm">
-
+        <form class="fixed-bottom" id="messageForm">
             <div class="input-group">
-                <textarea class="form-control" id="message" placeholder="Enter message"></textarea>
+                <textarea class="form-control" id="message" placeholder="Enter message" style="resize:none"></textarea>
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary" value="Send Message">Submit</button>
                 </div>
             </div>
-            <div class="form-group">
-                <br />
-                <div class="messageBox" id="messageBox"> </div>
+        </form>
+    </div>
 
+    <script>
+        $(function () {
+            // connect socket
+            var socket = io();
+            // when the user enter the new message, submit to the socket client to socket server
+            $('#messageForm').submit(function (e) {
+                e.preventDefault();
+                socket.emit('send message', $('#message').val());
+                $('#message').val('');
+            });
+
+            // receive the message back from the socket server
+            socket.on('new message', function (data) {
+                var time = moment().format("h:mm:ss a");
+                $('#chat').append('<div id="well_chat"><strong>' + data.name + '</strong> <span style="color:rgb(129, 127, 127)">[' + time + ']:</span> ' + data.msg + '</div>');
+            });
+
+            // get the users who are online
+            socket.on('get users', function (data) {
+                var html = '';
+                for (i = 0; i < data.length; ++i) {
+                    html += '<li class="list-group-item">' + data[i] + '</li>'
+                }
+                $('#users').html(html);
+            })
+        });
+    </script>
+
+{{else if face}}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div class="text-center border">
+                    <h3>Users</h3>
+                    <ul class="list-group scrollable m-2" id='users' style="height: 500px"> </ul>
+                </div>
+                <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target=".picture">Large modal</button>
+                
+                <div class="modal fade picture" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="messageFromBackend">Loading Message...</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <img id="imageFromBackend" width="100%">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="col-9">
+                <div class="border">
+                    <h3 class="text-center">Message</h3>
+                    <div class="messageBox scrollable border m-2" id="messageBox"  style="height: 500px">
+                        <ul class="h-80" id="chat"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form class="fixed-bottom" id="messageForm">
+            <div class="input-group">
+                <textarea class="form-control" id="message" placeholder="Enter message" style="resize:none"></textarea>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary" value="Send Message">Submit</button>
+                </div>
             </div>
         </form>
     </div>
-</div>
 
-<script>
-    $(function () {
-        // connect socket
-        var socket = io();
-        // when the user enter the new message, submit to the socket client to socket server
-        $('#messageForm').submit(function (e) {
-            e.preventDefault();
-            socket.emit('send message', $('#message').val());
-            $('#message').val('');
-        });
+    <script>
+        $(function () {
+            // connect socket
+            var socket = io();
+            var name = '';
+            // when the user enter the new message, submit to the socket client to socket server
+            $('#messageForm').submit(function (e) {
+                e.preventDefault();
+                socket.emit('send message', $('#message').val());
+                $('#message').val('');
+            });
 
-        // receive the message back from the socket server
-        socket.on('new message', function (data) {
-            console.log('data.name: ' + data.name);
-            var date = new Date();
-            var milliseconds = date.getDate();
-            var time = moment(milliseconds).format("H:MMa");
+            // receive the message back from the socket server
+            socket.on('new message', function (data) {
+                var time = moment().format("h:mm:ss a");
+                $('#chat').append('<div id="well_chat"><strong>' + data.name + '</strong> <span style="color:rgb(129, 127, 127)">[' + time + ']:</span> ' + data.msg + '</div>');
+            });
 
-            $('#messageBox').append($('#chat').prepend('<div id="well_chat"><strong>' + data.name +
-                '</strong>' + ': ' + data.msg + '                    @' + time + '</div>'));
+            // get the users who are online
+            socket.on('get users', function (data) {
+                var html = '';
+                for (i = 0; i < data.length; ++i) {
+                    html += '<li class="list-group-item">' + data[i] + '</li>'
+                }
+                $('#users').html(html);
+            })
 
-        });
-
-        // get the users who are online
-        socket.on('get users', function (data) {
-            console.log('online users: ' + data);
-            var html = '';
-            for (i = 0; i < data.length; ++i) {
-                html += '<li class="list-group-item">' + data[i] + '</li>'
+            function changeName() {
+                do {
+                    name = prompt('Please enter your name: ', 'anonymous');
+                } while (name == null || name == '')
+                socket.emit("change name", name);
             }
-            $('#users').html(html);
-        })
 
-        $("#changeUsername").click(function (e) {
-            e.preventDefault;
-            var name = changeName();
-            alert("Hi " + name);
-            socket.emit("change name", name);
+            if (name == '' || name == null){
+                changeName();
+            }
         });
 
-        // change username
-        function changeName() {
-            var name = prompt("Enter your preferred username:");
-            if (name == null || name == "") {
-                name = prompt("No new username is chosen");
-            } else {
-                return name;
-            }
-        }
+    $(document).ready(function () {
+        const socket = io();
+        socket.on('imageSmile', function (data) {
+            console.log(data);
+            $("#imageFromBackend").attr("src", data.image);
+            $("#messageFromBackend").html(data.message);
+        });
     });
-</script>
 
+    </script>
 
 {{else}}
 
+    <div class="container">
+        <h1 class="display-4">Welcome!</h1>
+        <p class="lead">
+            This is a simple web chat (or Bulletin Board System) that allow user exchanging messages with other users through chat
+            room (or public message board). 
+        </p>
+        <hr class="my-4">        
+        <p> For the live Demo, you can either: </p>
+        <a class="btn btn-lg btn-outline-danger" href="/auth/google" role="button">Login with <i class="fab fa-google-plus-g"></i></a> or 
+        <a class="btn btn-lg btn-outline-success" href="/countTime" role="button">Login with your smile <i class="far fa-smile-wink"></i></a> 
+        <hr class="my-4">
+        <p>If you are intested about this project, you can visit our github page for more information.</p>
+        <p class="lead">
+            <a class="btn btn-lg btn-outline-primary" href="https://psu-oss-group.github.io/ChatAppFaceID/" role="button"><i class="fab fa-github"></i> Learn more</a>
+        </p>
+    </div>
 
-<div class="jumbotron">
-    <h1 class="display-4">Welcome!</h1>
-    <p class="lead">
-        This is a simple web chat (or Bulletin Board System) that allow user exchanging messages with other users through chat
-        room (or public message board). 
-    </p>
-    <br/>
-    
-    <p> For the live Demo, you can either: </p>
-    <a class="btn btn-lg btn-outline-danger" href="/auth/google" role="button">Login with <i class="fab fa-google-plus-g"></i></a> or 
-    <a class="btn btn-lg btn-outline-success" href="/countTime" role="button">Login with your smile <i class="far fa-smile-wink"></i></a> 
-    <hr class="my-4">
-    <p>If you are intested about this project, you can visit our github page for more information.</p>
-    <p class="lead">
-        <a class="btn btn-lg btn-outline-primary" href="https://psu-oss-group.github.io/ChatAppFaceID/" role="button"><i class="fab fa-github"></i> Learn more</a>
-    </p>
-</div>
-
-
-
-{{/if}}
 {{/if}}

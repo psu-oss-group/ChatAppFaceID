@@ -22,7 +22,7 @@ var isFace = false;
 
 connections = [];
 users = [];
-temp_user = "anonymous";
+temp_user = "";
 
 // app.use(logger('dev'));
 // app.use(cookieParser());
@@ -47,12 +47,7 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(
-  new GoogleStrategy(authConfig.google, function(
-    accessToken,
-    refreshToken,
-    profile,
-    done
-  ) {
+  new GoogleStrategy(authConfig.google, function(accessToken, refreshToken, profile, done) {
     return done(null, profile);
   })
 );
@@ -67,19 +62,14 @@ app.get("/login", function(req, res) {
   });
 });
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", {
+app.get("/auth/google", passport.authenticate("google", {
     scope: ["openid", "email", "profile"]
   })
 );
 
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
+app.get("/auth/google/callback", passport.authenticate("google", {
     failureRedirect: "/login"
-  }),
-  function(req, res) {
+  }),function(req, res) {
     res.redirect("/account");
   }
 );
@@ -88,7 +78,7 @@ app.get("/account", ensureAuthenticated, function(req, res) {
   res.render("account", {
     user: req.user
   });
-  console.log(req.user);
+  // console.log(req.user);
 });
 
 app.get("/logout", function(req, res) {
@@ -102,19 +92,17 @@ app.get("/countTime", function(req, res) {
 });
 
 app.get("/faceID", function(req, res) {
-  //var timer = setTimeout(function() {
   capture();
-  //}, 2000);
+  
   // capture the smiling ID
   function capture() {
     cam.capture("public/test_pic", {}, function(err, data) {
       if (err) {
         res.render("faceLogin");
-        console.log(err);
+        // console.log(err);
         io.on("connection", function(socket) {
           fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
-            socket.emit(
-              "imageNotSmile", {
+            socket.emit("imageNotSmile", {
                 image: "data:image/jpg;base64," + buff.toString("base64"), function(data) {console.log("send err: " + data);},
                 message: err
               }
@@ -122,8 +110,7 @@ app.get("/faceID", function(req, res) {
           });
         });
       } else {
-        console.log(data);
-
+        // console.log(data);
         const mat = new cv.imread("public/test_pic.jpg");
         const gray = mat.bgrToGray();
         cv.imwrite("public/result_GRAY.jpg", gray);
@@ -131,22 +118,32 @@ app.get("/faceID", function(req, res) {
 
         if (result == 0) {
           res.render("faceLogin");
-          console.log("No smilling face detected");
+          // console.log("No smilling face detected");
           cv.imwrite("public/result_NOSMILE.jpg", mat);
           io.on("connection", function(socket) {
             fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
-              socket.emit(
-                "imageNotSmile", {
+              socket.emit("imageNotSmile", {
                   image: "data:image/jpg;base64," + buff.toString("base64"),function(data) {console.log("send image:" + data);},
-                  message: "No smilling face detected"
+                  message: "No smilling face detected, Let's try again!"
                 }
               );
             });
           });
+          // passing without smiling face being detected
+          // isFace = true; 
         } else {
-          //const outBase64 = cv.imencode(".jpg", result).toString("base64");
+          // const outBase64 = cv.imencode(".jpg", result).toString("base64");
           isFace = true;
           cv.imwrite("public/result_SMILE.jpg", result);
+          io.on("connection", function(socket) {
+            fs.readFile("public/result_SMILE.jpg", function(err, buff) {
+              socket.emit("imageSmile", {
+                  image: "data:image/jpg;base64," + buff.toString("base64"),function(data) {console.log("send image:" + data);},
+                  message: "Smilling face detected!"
+                }
+              );
+            });
+          });
           res.redirect("/");
         }
       }
@@ -206,25 +203,24 @@ function detect_smile(grayImg, mat) {
 
 //listen on the connection event
 io.on("connection", function(socket) {
-  connections.push(socket);
-  socket.username = temp_user;
-  users.push(socket.username);
-  updateUsers();
-  console.log(
-    "[" +
-      socket.username +
-      "] is connected, the connection.length: " +
-      connections.length
-  );
+  if(temp_user != "" || temp_user == null){
+    connections.push(socket);
+    socket.username = temp_user;
+    users.push(socket.username);
+    updateUsers();
+  }
+
+  console.log("[" + socket.username + "] is connected, the connection.length: " + connections.length);
 
   socket.on("disconnect", function(data) {
     users.splice(users.indexOf(socket.username), 1);
-
     connections.splice(connections.indexOf(socket), 1);
-    console.log(
-      "[" + socket.username + "} is disconnected, the connection.length: ",
-      connections.length
-    );
+    console.log("[" + socket.username + "] is disconnected, the connection.length: ", connections.length);
+  });  
+
+  socket.on("send message", function(data) {
+    console.log("server.message: " + data);
+    io.sockets.emit("new message", { msg: data, name: socket.username });
   });
 
   socket.on("change name", function(data) {
@@ -234,11 +230,6 @@ io.on("connection", function(socket) {
     socket.username = data;
     users.push(socket.username);
     updateUsers();
-  });
-
-  socket.on("send message", function(data) {
-    console.log("server.message: " + data);
-    io.sockets.emit("new message", { msg: data, name: socket.username });
   });
 
   function updateUsers() {
