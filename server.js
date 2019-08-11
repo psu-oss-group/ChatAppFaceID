@@ -36,7 +36,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(express.static(__dirname + '/public'));
+app.use(express.static('public'));
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -83,6 +83,7 @@ app.get("/account", ensureAuthenticated, function(req, res) {
 
 app.get("/logout", function(req, res) {
   req.logout();
+  temp_user = "";
   isFace = false;
   res.redirect("/");
 });
@@ -98,13 +99,14 @@ app.get("/faceID", function(req, res) {
   function capture() {
     cam.capture("public/test_pic", {}, function(err, data) {
       if (err) {
-        res.render("faceLogin");
-        // console.log(err);
+        res.render("faceLoginFailed");
+        console.log(err);
+        error = err.stack
         io.on("connection", function(socket) {
           fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
             socket.emit("imageNotSmile", {
-                image: "data:image/jpg;base64," + buff.toString("base64"), function(data) {console.log("send err: " + data);},
-                message: err
+                image: "data:image/jpg;base64," + buff.toString("base64"),
+                message: error
               }
             );
           });
@@ -117,14 +119,14 @@ app.get("/faceID", function(req, res) {
         var result = detect_smile(gray, mat);
 
         if (result == 0) {
-          res.render("faceLogin");
+          res.render("faceLoginFailed");
           // console.log("No smilling face detected");
           cv.imwrite("public/result_NOSMILE.jpg", mat);
           io.on("connection", function(socket) {
             fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
               socket.emit("imageNotSmile", {
-                  image: "data:image/jpg;base64," + buff.toString("base64"),function(data) {console.log("send image:" + data);},
-                  message: "No smilling face detected, Let's try again!"
+                  image: "data:image/jpg;base64," + buff.toString("base64"),
+                  message: "Smiles Can Not Be Detected, Let's Try Again!"
                 }
               );
             });
@@ -138,8 +140,8 @@ app.get("/faceID", function(req, res) {
           io.on("connection", function(socket) {
             fs.readFile("public/result_SMILE.jpg", function(err, buff) {
               socket.emit("imageSmile", {
-                  image: "data:image/jpg;base64," + buff.toString("base64"),function(data) {console.log("send image:" + data);},
-                  message: "Smilling face detected!"
+                  image: "data:image/jpg;base64," + buff.toString("base64"),
+                  message: "Smiles Detected"
                 }
               );
             });
@@ -183,7 +185,7 @@ function detect_smile(grayImg, mat) {
   // console.log("SMILE" + smiles_Rects);
 
   if (smiles_Rects.length <= 0) {
-    console.log("LENGTH" + smiles_Rects.length);
+    console.log("smiles_Rects.length: " + smiles_Rects.length);
     return 0;
   } else {
     for (var i = 0; i < smiles_Rects.length; ++i) {
