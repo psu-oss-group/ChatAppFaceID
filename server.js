@@ -178,8 +178,8 @@ function detect_smile(grayImg, mat) {
   const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
   smiles_Rects = smile.detectMultiScale(grayImg, {
     scaleFactor: 1.8,
-    minNeighbors: 15,
-    minSize: new cv.Size(150, 150),
+    minNeighbors: 25,
+    minSize: new cv.Size(100, 100),
     maxSize: new cv.Size(300, 300)
   }).objects; //return the array of smiling object with the rectangular size
   // console.log("SMILE" + smiles_Rects);
