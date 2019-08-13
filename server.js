@@ -11,8 +11,8 @@ var cam = require("node-webcam");
 var fs = require("fs");
 
 app.set("view engine", "hbs");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // var logger = require('morgan');
 // var cookieParser = require('cookie-parser');
@@ -92,6 +92,54 @@ app.get("/countTime", function(req, res) {
   res.render("countTime");
 });
 
+app.get("/test", function(req, res) {
+  res.render("test");
+});
+
+app.post("/api/picture", function(req, res) {
+  console.log(req.body.jpg)
+  var img = req.body.jpg.replace("data:image/jpeg;base64,","")
+  console.log(img)
+  buff = new Buffer(img, 'base64').toString('binary');
+  fs.writeFile('public/test_pic.jpg',buff, 'binary', function(err){ if(err)console.log(err)})
+  
+  const mat = new cv.imread("public/test_pic.jpg");
+  const gray = mat.bgrToGray();
+  cv.imwrite("public/result_GRAY.jpg", gray);
+  var result = detect_smile(gray, mat);
+
+  if (result == 0) {
+    res.render("faceLoginFailed");
+    // console.log("No smilling face detected");
+    cv.imwrite("public/result_NOSMILE.jpg", mat);
+    io.on("connection", function(socket) {
+      fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
+        socket.emit("imageNotSmile", {
+            image: "data:image/jpg;base64," + buff.toString("base64"),
+            message: "Smiles Can Not Be Detected, Let's Try Again!"
+          }
+        );
+      });
+    });
+    // passing without smiling face being detected
+    // isFace = true; 
+  } else {
+    // const outBase64 = cv.imencode(".jpg", result).toString("base64");
+    isFace = true;
+    cv.imwrite("public/result_SMILE.jpg", result);
+    io.on("connection", function(socket) {
+      fs.readFile("public/result_SMILE.jpg", function(err, buff) {
+        socket.emit("imageSmile", {
+            image: "data:image/jpg;base64," + buff.toString("base64"),
+            message: "Smiles Detected"
+          }
+        );
+      });
+    });
+    res.redirect("/");
+  }
+});
+
 app.get("/faceID", function(req, res) {
   capture();
   
@@ -112,7 +160,6 @@ app.get("/faceID", function(req, res) {
           });
         });
       } else {
-        // console.log(data);
         const mat = new cv.imread("public/test_pic.jpg");
         const gray = mat.bgrToGray();
         cv.imwrite("public/result_GRAY.jpg", gray);

@@ -1,0 +1,50 @@
+<div class="text-center mt-5">
+  <video id="videoElement" autoplay="true" style="margin: 0px auto; width: 500px; height: 375px; background-color: #666; border: 10px #333 solid;"></video>
+  <canvas id="canvas" width="500" height="375" style="margin: 0px auto; width: 500px; height: 375px; background-color: #666; border: 10px #333 solid;"></canvas>
+  <br/>
+  <button type="button" class="btn btn-lg btn-outline-success" id="capture1">Start</button>
+  <button type="button" class="btn btn-lg btn-outline-primary" id="capture">Snap</button>
+  <br/>
+  
+
+<script>
+  var video = document.querySelector("#videoElement");
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext("2d");
+
+  document.getElementById("capture1").addEventListener("click", function () {
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({
+          video: true
+        })
+        .then(function (stream) {
+          video.srcObject = stream;
+        })
+        .catch(function (err) {
+          console.log(err.name + ": " + err.message);
+        });
+    }
+  })
+
+  document.getElementById("capture").addEventListener("click", function () {
+    
+    context.drawImage(video, 0, 0, 500, 375);
+    jpg = canvas.toDataURL("image/jpeg");
+    $.ajax({
+      url: "/api/picture",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({jpg:jpg}),
+      success: function(response){
+        if(response){
+          console.log(response)
+        } else {
+          console.log('Error')
+        }
+      }
+    })
+    console.log(jpg)
+  });
+</script>
+</div>
