@@ -10,20 +10,18 @@ var cv = require("opencv4nodejs");
 var cam = require("node-webcam");
 var fs = require("fs");
 
-app.set("view engine", "hbs");
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
 // var logger = require('morgan');
 // var cookieParser = require('cookie-parser');
 var session = require("express-session");
 var port = process.env.PORT || 3000;
 var isFace = false;
+var connections = [];
+var users = [];
+var temp_user = "";
 
-connections = [];
-users = [];
-temp_user = "";
-
+app.set("view engine", "hbs");
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // app.use(logger('dev'));
 // app.use(cookieParser());
 app.use(
@@ -96,113 +94,36 @@ app.get("/test", function(req, res) {
   res.render("test");
 });
 
-app.post("/api/picture", function(req, res) {
-  console.log(req.body.jpg)
-  var img = req.body.jpg.replace("data:image/jpeg;base64,","")
-  console.log(img)
-  buff = new Buffer(img, 'base64').toString('binary');
-  fs.writeFile('public/test_pic.jpg',buff, 'binary', function(err){ if(err)console.log(err)})
-  
-  const mat = new cv.imread("public/test_pic.jpg");
-  const gray = mat.bgrToGray();
-  cv.imwrite("public/result_GRAY.jpg", gray);
-  var result = detect_smile(gray, mat);
-
-  if (result == 0) {
-    res.render("faceLoginFailed");
-    // console.log("No smilling face detected");
-    cv.imwrite("public/result_NOSMILE.jpg", mat);
-    io.on("connection", function(socket) {
-      fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
-        socket.emit("imageNotSmile", {
-            image: "data:image/jpg;base64," + buff.toString("base64"),
-            message: "Smiles Can Not Be Detected, Let's Try Again!"
-          }
-        );
-      });
-    });
-    // passing without smiling face being detected
-    // isFace = true; 
-  } else {
-    // const outBase64 = cv.imencode(".jpg", result).toString("base64");
-    isFace = true;
-    cv.imwrite("public/result_SMILE.jpg", result);
-    io.on("connection", function(socket) {
-      fs.readFile("public/result_SMILE.jpg", function(err, buff) {
-        socket.emit("imageSmile", {
-            image: "data:image/jpg;base64," + buff.toString("base64"),
-            message: "Smiles Detected"
-          }
-        );
-      });
-    });
-    res.redirect("/");
-  }
-});
-
 app.get("/faceID", function(req, res) {
-  capture();
-  
-  // capture the smiling ID
-  function capture() {
-    cam.capture("public/test_pic", {}, function(err, data) {
-      if (err) {
-        res.render("faceLoginFailed");
-        console.log(err);
-        error = err.stack
-        io.on("connection", function(socket) {
-          fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
-            socket.emit("imageNotSmile", {
-                image: "data:image/jpg;base64," + buff.toString("base64"),
-                message: error
-              }
-            );
-          });
+  cam.capture("public/test_pic", {}, function(err, data) {
+    if (err) {
+      res.render("faceLoginFailed");
+      console.log(err);
+      error = err.stack
+      io.on("connection", function(socket) {
+        fs.readFile("public/assets/placeholder.jpg", function(err, buff) {
+          socket.emit("imageNotSmile", {
+              image: "data:image/jpg;base64," + buff.toString("base64"),
+              message: error
+            }
+          );
         });
-      } else {
-        const mat = new cv.imread("public/test_pic.jpg");
-        const gray = mat.bgrToGray();
-        cv.imwrite("public/result_GRAY.jpg", gray);
-        var result = detect_smile(gray, mat);
-
-        if (result == 0) {
-          res.render("faceLoginFailed");
-          // console.log("No smilling face detected");
-          cv.imwrite("public/result_NOSMILE.jpg", mat);
-          io.on("connection", function(socket) {
-            fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
-              socket.emit("imageNotSmile", {
-                  image: "data:image/jpg;base64," + buff.toString("base64"),
-                  message: "Smiles Can Not Be Detected, Let's Try Again!"
-                }
-              );
-            });
-          });
-          // passing without smiling face being detected
-          // isFace = true; 
-        } else {
-          // const outBase64 = cv.imencode(".jpg", result).toString("base64");
-          isFace = true;
-          cv.imwrite("public/result_SMILE.jpg", result);
-          io.on("connection", function(socket) {
-            fs.readFile("public/result_SMILE.jpg", function(err, buff) {
-              socket.emit("imageSmile", {
-                  image: "data:image/jpg;base64," + buff.toString("base64"),
-                  message: "Smiles Detected"
-                }
-              );
-            });
-          });
-          res.redirect("/");
-        }
-      }
-    });
-  }
+      });
+    } else {
+      detect_smile_helper(req, res, "faceLoginFailed")
+    }
+  });
 });
 
-server.listen(port, function() {
-  console.log("Listening on http://localhost:" + `${port}`);
-});
+app.get("/testResult", function(req, res) {
+  detect_smile_helper(req, res, "faceLoginFailed");
+})
+
+app.post("/api/picture", function(req, res) {
+  var img = req.body.jpg.replace("data:image/jpeg;base64,","")
+  buff = new Buffer(img, 'base64').toString('binary');
+  fs.writeFile('public/test_pic.jpg',buff, 'binary', function(err){if(err){console.log(err)}});
+})
 
 // Simple route middleware to ensure user is authenticated.
 function ensureAuthenticated(req, res, next) {
@@ -218,10 +139,45 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-//FUNCTION to detect smile
+// Wrapper for smile detection
+function detect_smile_helper(req, res, rder){
+  const mat = new cv.imread("public/test_pic.jpg");
+  const gray = mat.bgrToGray();
+  cv.imwrite("public/result_GRAY.jpg", gray);
+  var result = detect_smile(gray, mat);
+
+  if (result == 0) {
+    res.render(rder);
+    cv.imwrite("public/result_NOSMILE.jpg", mat);
+    io.on("connection", function(socket) {
+      fs.readFile("public/result_NOSMILE.jpg", function(err, buff) {
+        socket.emit("imageNotSmile", {
+            image: "data:image/jpg;base64," + buff.toString("base64"),
+            message: "Smiles Can Not Be Detected, Let's Try Again!"
+          }
+        );
+      });
+    });
+  } else {
+    isFace = true;
+    cv.imwrite("public/result_SMILE.jpg", result);
+    io.on("connection", function(socket) {
+      fs.readFile("public/result_SMILE.jpg", function(err, buff) {
+        socket.emit("imageSmile", {
+            image: "data:image/jpg;base64," + buff.toString("base64"),
+            message: "Smiles Detected"
+          }
+        );
+      });
+    });
+    res.redirect("/");
+  }
+}
+
+// Detect smile function
 function detect_smile(grayImg, mat) {
   const blue = new cv.Vec(255, 0, 0);
-  // detect smile
+  // haarcascade trained model
   const smile = new cv.CascadeClassifier(cv.HAAR_SMILE);
   smiles_Rects = smile.detectMultiScale(grayImg, {
     scaleFactor: 1.8,
@@ -284,4 +240,8 @@ io.on("connection", function(socket) {
   function updateUsers() {
     io.sockets.emit("get users", users);
   }
+});
+
+server.listen(port, function() {
+  console.log("Listening on http://localhost:" + `${port}`);
 });

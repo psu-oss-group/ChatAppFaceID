@@ -15,14 +15,14 @@
   document.getElementById("capture1").addEventListener("click", function () {
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
-          video: true
-        })
-        .then(function (stream) {
-          video.srcObject = stream;
-        })
-        .catch(function (err) {
-          console.log(err.name + ": " + err.message);
-        });
+        video: true
+      })
+      .then(function (stream) {
+        video.srcObject = stream;
+      })
+      .catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      });
     }
   })
 
@@ -45,6 +45,9 @@
       }
     })
     console.log(jpg)
+    setTimeout(function () {
+      window.location.href = "/testResult"
+    }, 1000);
   });
 </script>
 </div>

@@ -4,12 +4,12 @@
 
     socket.on('imageNotSmile', function (data) {
       console.log(data.message);
-      $("#image1").attr("src", data.image);
+      $("#image").attr("src", data.image);
       $("#message").html(data.message);
     });
   });
-
 </script>
+
 <div class="text-center">
   <div class="alert alert-danger">
     <i class="far fa-sad-tear"></i> <strong id="message">Loading Message...</strong>
@@ -20,6 +20,5 @@
 </div>
 
 <div class="text-center" style="margin-top: 50px">
-<img id="image1" height="400" width="500">
-{{!-- <img id="image2" height="400" width="500" style="visibility: hidden"> --}}
+  <img id="image" height="400" width="500">
 </div>
