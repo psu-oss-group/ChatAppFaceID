@@ -2,16 +2,17 @@
 
 Copyright (c) 2019 psu-oss-group
 
-ChatAppFaceID is a web chat (or Bulletin Board System) that allow user exchanging messages with other users through chat room ( or public message board). Each user has two options to log into the chat room. They can either log in by using their google account or using the smiling facial recognition.
+ChatAppFaceID is a webchat (or Bulletin Board System) that allow authenticated user exchanging messages with other authenticated users through chat room ( or public message board). There are two ways to authenticate: `Login with Google account` or `Login with the facial recognition` that we called it the "FaceID".
 
-- Log in by Google Account
+- Log in with Google Account
+  - User will be redirected to the account page and able see their `Google profile photo, ID, username, and email address` once he/she successfully logs in by using his/her google account.
+  - User can join the chat room by clicking either `Start Chat` button or `Home` navlink in the navigation bar.
+  - User should see his/her username in the `Online Users` box and the navbar.
 
-  - When the user succesfully logs in by using his/her google account, they will see their `Google profile photo, ID, username, and email address`. Then, they can join the chat room by clicking `Home` in the navigation bar.
-  - You should see your name in the `Online Users` box and the `Hello, "your name"`. You can begin to chat.
-
-- Log in by Smiling Facial Recognition
-  - When this feature is chosen, the live webcame is turned on. It will only allow you to login when it catches your smiling face.
-  - When you click on `Acccount` in the nav bar, it will not display anything.
+- Log in with a Smile (Facial Recognition)
+  - User will be captured by the WebCam. It will only allow the user to login if the smile is been detected. The detection is powered by opencv with pre-trained haarcascade.
+  - User will be redirected to the chat room, and he/she doesn't have the access to the account page.
+  - User will be ask to enter a username, and he/she should see the username in the `Online Users` box and the navbar.
 
 ## Project Participants
 
@@ -20,16 +21,27 @@ ChatAppFaceID is a web chat (or Bulletin Board System) that allow user exchangin
 - Weiwei Chen
 
 ## Links
-
+- [Live Demo](https://agile-tor-53744.herokuapp.com/)
 - [GitHub Page](https://psu-oss-group.github.io/ChatAppFaceID/)
 - [Repository](https://github.com/psu-oss-group)
 
-## Tech stack, Pre-reqs and setup
+## Tech stack
 
-The dependencies of your package.json should include Nodejs, express, Socket.io, Opencv4node, passport, and passport-google-oauth.
+Backend: Nodejs, Express, Socket.io, Opencv4nodejs, Passport.js with passport-google-oauth strategy
 
-## Build
+Frontend: Handlebarsjs, Ajax, Bootstap, Momentjs, Font Awesome
 
+Deploy: Docker, Heroku
+
+## Pre-reqs, Setup, and Build
+
+Get prerequisites
+```shell
+$ sudo apt update
+$ sudo apt install cmake fswebcam
+```
+
+Git clone, and install all modules/dependencies (Opencv4nodejs installation might take longe time)
 ```shell
 $ git clone https://github.com/psu-oss-group/ChatAppFaceID.git
 $ cd ChatAppFaceID
@@ -37,20 +49,23 @@ $ npm install
 
 ```
 
-## Run
-
+Run the server.js
 ```shell
 $ node server.js
 ```
-
 Go to: [localhost:3000/](http://localhost:3000/)
 
-## Docker
+## Docker (Optional)
+
+With a lightweight, stand-alone docker container, you don't have to worry about complex dependencies or any of the prerequisites.
+We made the container, as it allows us to easily deploy our app to anywhere.
+
+Pull the image and list the images info.
 ```shell
 $ docker pull ronniesong0809/chatappfaceid
 $ docker images
 ```
-run the docker image by using the image id.
+run the docker image by using the image id. Make sure sharing webcam with container by
 ```shell
 $ docker run -p 3000:3000 --device=/dev/video0:/dev/video0 [image_id]
 or
@@ -60,11 +75,13 @@ Go to: [localhost:3000/](http://localhost:3000/)
 
 ## References
 
-- [Opencv4node](https://github.com/justadudewhohacks/opencv4nodejs)
-- [HAAR_CASCADE](https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_Image_Object_Detection_Face_Detection_Haar_Cascade_Classifiers.php)
-- [SocketIo](https://socket.io/docs/)
-- [Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
-- [Google_Passport](http://www.passportjs.org/docs/google/)
+- [Documentation | SocketIo](https://socket.io/docs/)
+- [Documentation | Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+- [Documentation | Opencv4nodejs](https://github.com/justadudewhohacks/opencv4nodejs)
+- [Face Detection using Haar Cascades | HAAR_CASCADE](https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_Image_Object_Detection_Face_Detection_Haar_Cascade_Classifiers.php)
+- [Google strategy | Passport.js](http://www.passportjs.org/docs/google/)
+- [Dockerfile | Docker](https://docs.docker.com/engine/reference/builder/)
+- [Deploy with Docker | Heroku](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
 
 ## License
 
