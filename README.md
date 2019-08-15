@@ -3,7 +3,7 @@
 [![Website](https://img.shields.io/website/https/agile-tor-53744.herokuapp.com)](https://agile-tor-53744.herokuapp.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/psu-oss-group/happy-chat/License)
 [![contributions welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat)](https://github.com/psu-oss-group/happy-chat/issues)
-
+[![Gitter](https://badges.gitter.im/psu-oss-group/happy-chat.svg)](https://gitter.im/psu-oss-group/happy-chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Copyright (c) 2019 psu-oss-group
 
