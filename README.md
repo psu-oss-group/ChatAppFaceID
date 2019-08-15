@@ -82,6 +82,7 @@ Go to: [localhost:3000/](http://localhost:3000/)
 - [Google strategy | Passport.js](http://www.passportjs.org/docs/google/)
 - [Dockerfile | Docker](https://docs.docker.com/engine/reference/builder/)
 - [Deploy with Docker | Heroku](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
+- [Socket.io Chat App Using Websockets | Socket](https://www.youtube.com/watch?v=tHbCkikFfDE&amp=&t=1426s)
 
 ## License
 
