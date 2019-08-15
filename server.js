@@ -119,9 +119,9 @@ app.get('/testResult', function(req, res) {
     detect_smile_helper(req, res, 'faceLoginFailed')
 })
 
-app.post('/api/picture', function(req, res) {
+app.post('/api/picture', function(req) {
     var img = req.body.jpg.replace('data:image/jpeg;base64,','')
-    buff = new Buffer(img, 'base64').toString('binary')
+    var buff = new Buffer(img, 'base64').toString('binary')
     fs.writeFile('public/test_pic.jpg',buff, 'binary', function(err){if(err){console.log(err)}})
 })
 
@@ -179,7 +179,7 @@ function detect_smile(grayImg, mat) {
     const blue = new cv.Vec(255, 0, 0)
     // haarcascade trained model
     const smile = new cv.CascadeClassifier(cv.HAAR_SMILE)
-    smiles_Rects = smile.detectMultiScale(grayImg, {
+    var smiles_Rects = smile.detectMultiScale(grayImg, {
         scaleFactor: 1.8,
         minNeighbors: 25,
         minSize: new cv.Size(100, 100),
@@ -217,7 +217,7 @@ io.on('connection', function(socket) {
 
     console.log('[' + socket.username + '] is connected, the connection.length: ' + connections.length)
 
-    socket.on('disconnect', function(data) {
+    socket.on('disconnect', function() {
         users.splice(users.indexOf(socket.username), 1)
         connections.splice(connections.indexOf(socket), 1)
         console.log('[' + socket.username + '] is disconnected, the connection.length: ', connections.length)
