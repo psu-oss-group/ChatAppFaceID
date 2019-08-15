@@ -10,8 +10,7 @@ var cv = require('opencv4nodejs')
 var cam = require('node-webcam')
 var fs = require('fs')
 
-// var logger = require('morgan');
-// var cookieParser = require('cookie-parser');
+
 var session = require('express-session')
 var port = 3000
 var isFace = false
@@ -22,8 +21,7 @@ var temp_user = ''
 app.set('view engine', 'hbs')
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-// app.use(logger('dev'));
-// app.use(cookieParser());
+
 app.use(
     session({
         secret: 'keyboard cat',
@@ -185,7 +183,7 @@ function detect_smile(grayImg, mat) {
         minSize: new cv.Size(100, 100),
         maxSize: new cv.Size(300, 300)
     }).objects //return the array of smiling object with the rectangular size
-    // console.log("SMILE" + smiles_Rects);
+    
 
     if (smiles_Rects.length <= 0) {
         console.log('smiles_Rects.length: ' + smiles_Rects.length)
