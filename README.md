@@ -76,13 +76,13 @@ Go to: [localhost:3000/](http://localhost:3000/)
 ## References
 
 - [Documentation | SocketIo](https://socket.io/docs/)
+- [Socket.io Chat App Using Websockets | SocketIO](https://www.youtube.com/watch?v=tHbCkikFfDE&amp=&t=1426s)
 - [Documentation | Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
 - [Documentation | Opencv4nodejs](https://github.com/justadudewhohacks/opencv4nodejs)
 - [Face Detection using Haar Cascades | HAAR_CASCADE](https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_Image_Object_Detection_Face_Detection_Haar_Cascade_Classifiers.php)
 - [Google strategy | Passport.js](http://www.passportjs.org/docs/google/)
 - [Dockerfile | Docker](https://docs.docker.com/engine/reference/builder/)
 - [Deploy with Docker | Heroku](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
-- [Socket.io Chat App Using Websockets | Socket](https://www.youtube.com/watch?v=tHbCkikFfDE&amp=&t=1426s)
 
 ## License
 
