@@ -1,8 +1,8 @@
-# ChatAppFaceID
+# Happy Chat
 
 Copyright (c) 2019 psu-oss-group
 
-ChatAppFaceID is a webchat (or Bulletin Board System) that allow authenticated user exchanging messages with other authenticated users through chat room ( or public message board). There are two ways to authenticate: `Login with Google account` or `Login with the facial recognition` that we called it the "FaceID".
+Happy Chat is a webchat (or Bulletin Board System) that allow authenticated user exchanging messages with other authenticated users through chat room ( or public message board). There are two ways to authenticate: `Login with Google account` or `Login with the facial recognition` that we called it the "FaceID".
 
 - Log in with Google Account
   - User will be redirected to the account page and able see their `Google profile photo, ID, username, and email address` once he/she successfully logs in by using his/her google account.
@@ -22,7 +22,7 @@ ChatAppFaceID is a webchat (or Bulletin Board System) that allow authenticated u
 
 ## Links
 - [Live Demo](https://agile-tor-53744.herokuapp.com/)
-- [GitHub Page](https://psu-oss-group.github.io/ChatAppFaceID/)
+- [GitHub Page](https://psu-oss-group.github.io/happy-chat/)
 - [Repository](https://github.com/psu-oss-group)
 
 ## Tech stack
@@ -43,8 +43,8 @@ $ sudo apt install cmake fswebcam
 
 Git clone, and install all modules/dependencies (Opencv4nodejs installation might take longe time)
 ```shell
-$ git clone https://github.com/psu-oss-group/ChatAppFaceID.git
-$ cd ChatAppFaceID
+$ git clone https://github.com/psu-oss-group/happy-chat.git
+$ cd happy-chat
 $ npm install
 
 ```

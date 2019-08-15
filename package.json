@@ -1,5 +1,5 @@
 {
-  "name": "chatappfaceid",
+  "name": "happy-chat",
   "version": "1.0.0",
   "description": "Copyright (c) 2019 psu-oss-group",
   "main": "server.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/psu-oss-group/ChatAppFaceID.git"
+    "url": "git+https://github.com/psu-oss-group/happy-chat.git"
   },
   "author": "psu-oss-group",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/psu-oss-group/ChatAppFaceID/issues"
+    "url": "https://github.com/psu-oss-group/happy-chat/issues"
   },
-  "homepage": "https://github.com/psu-oss-group/ChatAppFaceID#readme",
+  "homepage": "https://github.com/psu-oss-group/happy-chat#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-session": "^1.16.2",
