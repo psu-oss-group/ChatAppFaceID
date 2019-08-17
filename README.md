@@ -1,4 +1,9 @@
 # Happy Chat
+[![Heroku](https://img.shields.io/badge/Heroku-deployed-blueviolet)](https://agile-tor-53744.herokuapp.com)
+<img alt="Website" src="https://img.shields.io/website/https/agile-tor-53744.herokuapp.com">
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/psu-oss-group/happy-chat/blob/readme/LICENSE)
+[![contributions welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat)](https://github.com/psu-oss-group/happy-chat/issues)
+[![Gitter](https://badges.gitter.im/psu-oss-group/happy-chat.svg)](https://gitter.im/psu-oss-group/happy-chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Copyright (c) 2019 psu-oss-group
 
@@ -75,14 +80,21 @@ Go to: [localhost:3000/](http://localhost:3000/)
 
 ## References
 
-- [Documentation | SocketIo](https://socket.io/docs/)
-- [Socket.io Chat App Using Websockets | SocketIO](https://www.youtube.com/watch?v=tHbCkikFfDE&amp=&t=1426s)
-- [Documentation | Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
-- [Documentation | Opencv4nodejs](https://github.com/justadudewhohacks/opencv4nodejs)
-- [Face Detection using Haar Cascades | HAAR_CASCADE](https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_Image_Object_Detection_Face_Detection_Haar_Cascade_Classifiers.php)
-- [Google strategy | Passport.js](http://www.passportjs.org/docs/google/)
-- [Dockerfile | Docker](https://docs.docker.com/engine/reference/builder/)
-- [Deploy with Docker | Heroku](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
+[Documentation | SocketIo](https://socket.io/docs/)
+
+[Socket.io Chat App Using Websockets | SocketIO](https://www.youtube.com/watch?v=tHbCkikFfDE&amp=&t=1426s)
+
+[Documentation | Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+
+[Documentation | Opencv4nodejs](https://github.com/justadudewhohacks/opencv4nodejs)
+
+[Face Detection using Haar Cascades | HAAR_CASCADE](https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_Image_Object_Detection_Face_Detection_Haar_Cascade_Classifiers.php)
+
+[Google strategy | Passport.js](http://www.passportjs.org/docs/google/)
+
+[Dockerfile | Docker](https://docs.docker.com/engine/reference/builder/)
+
+[Deploy with Docker | Heroku](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml)
 
 ## License
 
